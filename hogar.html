@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mi Hogar — Gestión, despensa y recetas</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzFGNDAzNSIvPjxwYXRoIGQ9Ik03IDE1bDktNyA5IDciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0U4QTEzQSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik05IDE0djloMTR2LTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZBRjZFRiIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMyAyM3YtNWg2djUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZBRjZFRiIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPgo=">
+<meta name="theme-color" content="#1F4035">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#1F4035; --verde-2:#2E5A4A; --verde-3:#16302a;
+    --lino:#FAF6EF; --salvia:#E7EEE6; --salvia-2:#D7E3D6;
+    --miel:#E8A13A; --miel-dark:#C9831F;
+    --tinta:#23211C; --tinta-soft:#6A675E; --linea:#E3DCCF; --blanco:#fff;
+    --rojo:#C7553B; --verde-ok:#3C7A52;
+    --radio:16px; --sombra:0 10px 28px -18px rgba(31,64,53,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Mulish',system-ui,sans-serif;background:var(--salvia);color:var(--tinta);
+    -webkit-font-smoothing:antialiased;line-height:1.5;
+  }
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.1}
+  .app{max-width:560px;margin:0 auto;min-height:100vh;background:var(--lino);position:relative;
+    box-shadow:0 0 60px -20px rgba(0,0,0,.15);display:flex;flex-direction:column}
+  /* appbar */
+  .appbar{background:var(--verde);color:var(--lino);padding:16px 18px calc(16px);position:sticky;top:0;z-index:20}
+  .appbar .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .appbar .brand{display:flex;align-items:center;gap:10px}
+  .appbar .seal{width:32px;height:32px;border-radius:9px;background:rgba(232,161,58,.18);
+    display:grid;place-items:center;color:var(--miel)}
+  .appbar .seal svg{width:18px;height:18px}
+  .appbar h1{font-size:1.2rem;color:var(--lino)}
+  .appbar .sub{font-size:.74rem;color:#BFD0C2;margin-top:1px}
+  .icon-btn{background:rgba(255,255,255,.12);border:0;color:var(--lino);width:38px;height:38px;border-radius:10px;
+    display:grid;place-items:center;cursor:pointer}
+  .icon-btn svg{width:19px;height:19px}
+  /* content */
+  main{flex:1;padding:16px 16px 96px;overflow-y:auto}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .head-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px;gap:10px}
+  .head-row h2{font-size:1.45rem;color:var(--verde)}
+  .head-row .meta{font-size:.8rem;color:var(--tinta-soft);text-align:right;flex:0 0 auto}
+  /* progress */
+  .progress{height:8px;background:var(--salvia-2);border-radius:99px;overflow:hidden;margin:4px 0 16px}
+  .progress > i{display:block;height:100%;background:var(--miel);transition:width .3s}
+  /* add bar */
+  .addbar{display:flex;gap:8px;margin-bottom:14px}
+  .addbar input{flex:1;min-width:0}
+  input,select,textarea{
+    font-family:inherit;font-size:.95rem;padding:11px 13px;border:1.5px solid var(--linea);
+    border-radius:12px;background:var(--blanco);color:var(--tinta);width:100%;transition:.15s;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--verde-2)}
+  .btn{font-family:inherit;font-weight:700;border:0;border-radius:12px;cursor:pointer;
+    padding:11px 16px;font-size:.92rem;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
+  .btn svg{width:17px;height:17px}
+  .btn-pri{background:var(--miel);color:var(--verde-3)}
+  .btn-pri:active{background:var(--miel-dark)}
+  .btn-sm{padding:8px 12px;font-size:.85rem}
+  .btn-ghost{background:var(--salvia);color:var(--verde)}
+  .btn-line{background:transparent;color:var(--verde);box-shadow:inset 0 0 0 1.5px var(--linea)}
+  .btn-add{flex:0 0 auto;width:46px;padding:0;background:var(--verde);color:var(--lino);border-radius:12px}
+  .btn-add svg{width:20px;height:20px}
+  /* cards / list items */
+  .card{background:var(--blanco);border:1px solid var(--linea);border-radius:var(--radio);padding:14px;margin-bottom:10px}
+  .row{display:flex;align-items:center;gap:12px}
+  .check{flex:0 0 auto;width:24px;height:24px;border-radius:7px;border:2px solid var(--salvia-2);background:var(--blanco);
+    cursor:pointer;display:grid;place-items:center;transition:.15s}
+  .check svg{width:15px;height:15px;color:#fff;opacity:0;transform:scale(.5);transition:.15s}
+  .check.on{background:var(--verde-ok);border-color:var(--verde-ok)}
+  .check.on svg{opacity:1;transform:scale(1)}
+  .grow{flex:1;min-width:0}
+  .ttl{font-weight:600;font-size:.98rem;word-break:break-word}
+  .ttl.done{text-decoration:line-through;color:var(--tinta-soft)}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .tag{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--salvia);color:var(--verde-2)}
+  .tag.miel{background:#FBEAD0;color:var(--miel-dark)}
+  .tag.rojo{background:#F6DDD6;color:var(--rojo)}
+  .x{flex:0 0 auto;background:none;border:0;color:var(--tinta-soft);cursor:pointer;width:30px;height:30px;border-radius:8px;display:grid;place-items:center}
+  .x:active{background:var(--salvia)}
+  .x svg{width:16px;height:16px}
+  /* qty stepper */
+  .stepper{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  .stepper button{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--linea);background:var(--blanco);
+    font-size:1.1rem;font-weight:700;color:var(--verde);cursor:pointer;display:grid;place-items:center;line-height:1}
+  .stepper .q{min-width:54px;text-align:center;font-weight:700;font-size:.9rem}
+  .stepper .q small{font-weight:600;color:var(--tinta-soft);font-size:.74rem}
+  /* group label */
+  .group-lbl{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--miel-dark);
+    margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+  .group-lbl:first-child{margin-top:4px}
+  .group-lbl::after{content:"";flex:1;height:1px;background:var(--linea)}
+  /* empty */
+  .empty{text-align:center;color:var(--tinta-soft);padding:40px 20px;font-size:.92rem}
+  .empty svg{width:44px;height:44px;color:var(--salvia-2);margin-bottom:10px}
+  /* filters */
+  .chips{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+  .fchip{font-family:inherit;font-size:.82rem;font-weight:700;padding:7px 13px;border-radius:99px;border:1.5px solid var(--linea);
+    background:var(--blanco);color:var(--tinta-soft);cursor:pointer}
+  .fchip.on{background:var(--verde);border-color:var(--verde);color:var(--lino)}
+  /* recipe */
+  .recipe-ttl{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--verde);font-weight:600}
+  .pct{font-weight:800;font-size:.82rem}
+  .barmini{height:6px;background:var(--salvia-2);border-radius:99px;overflow:hidden;margin-top:8px}
+  .barmini > i{display:block;height:100%;border-radius:99px}
+  .miss{font-size:.82rem;color:var(--tinta-soft);margin-top:8px}
+  .miss b{color:var(--rojo)}
+  /* modal */
+  .scrim{position:fixed;inset:0;background:rgba(20,30,25,.5);z-index:40;display:none;align-items:flex-end;justify-content:center}
+  .scrim.open{display:flex}
+  .sheet{background:var(--lino);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));
+    max-height:90vh;overflow-y:auto;animation:up .25s ease}
+  @keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+  .sheet h3{font-size:1.25rem;color:var(--verde);margin-bottom:14px}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:.78rem;font-weight:700;color:var(--verde);margin-bottom:5px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .sheet-actions{display:flex;gap:10px;margin-top:8px}
+  .sheet-actions .btn{flex:1;padding:13px}
+  .ing-line{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--linea)}
+  .ing-line:last-child{border-bottom:0}
+  .ing-have{flex:0 0 auto;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:99px}
+  .ing-have.yes{background:#DCEEE2;color:var(--verde-ok)}
+  .ing-have.no{background:#F6DDD6;color:var(--rojo)}
+  .step-line{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--linea)}
+  .step-line:last-child{border-bottom:0}
+  .step-n{flex:0 0 auto;width:24px;height:24px;border-radius:7px;background:var(--salvia);color:var(--verde);
+    font-weight:800;font-size:.78rem;display:grid;place-items:center}
+  .step-txt{flex:1}
+  .step-txt.done{text-decoration:line-through;color:var(--tinta-soft)}
+  /* bottom nav */
+  nav.tabs{position:fixed;bottom:0;left:0;right:0;max-width:560px;margin:0 auto;background:var(--blanco);
+    border-top:1px solid var(--linea);display:flex;z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+  nav.tabs button{flex:1;background:none;border:0;cursor:pointer;padding:9px 4px 8px;color:var(--tinta-soft);
+    display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;font-size:.68rem;font-weight:700;position:relative}
+  nav.tabs button svg{width:23px;height:23px}
+  nav.tabs button.on{color:var(--verde)}
+  nav.tabs button.on::before{content:"";position:absolute;top:0;width:30px;height:3px;border-radius:99px;background:var(--miel)}
+  .navbadge{position:absolute;top:5px;right:50%;transform:translateX(20px);background:var(--rojo);color:#fff;
+    font-size:.62rem;font-weight:800;min-width:16px;height:16px;border-radius:99px;display:grid;place-items:center;padding:0 4px}
+  .toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:var(--verde-3);color:var(--lino);
+    padding:11px 18px;border-radius:99px;font-size:.85rem;font-weight:600;z-index:50;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap}
+  .toast.show{opacity:1}
+  .mini-link{background:none;border:0;color:var(--miel-dark);font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;padding:0}
+  /* ----- Personal ----- */
+  .seg{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+  .seg::-webkit-scrollbar{display:none}
+  .seg button{flex:0 0 auto;font-family:inherit;font-size:.82rem;font-weight:700;padding:8px 14px;border-radius:99px;
+    border:1.5px solid var(--linea);background:var(--blanco);color:var(--tinta-soft);cursor:pointer;white-space:nowrap}
+  .seg button.on{background:var(--verde);border-color:var(--verde);color:var(--lino)}
+  .mono-select{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  .mono-select select{flex:1}
+  .kv{display:flex;justify-content:space-between;gap:12px;padding:9px 2px;border-bottom:1px solid var(--linea);font-size:.92rem}
+  .kv .k{color:var(--tinta-soft)} .kv .v{font-weight:700;white-space:nowrap}
+  .kv.neg .v{color:var(--rojo)} .kv.pos .v{color:var(--verde-ok)}
+  .kv.tot{font-family:'Fraunces',serif;font-size:1.18rem;color:var(--verde);border-top:2px solid var(--verde);border-bottom:0;margin-top:6px;padding-top:12px}
+  .kv.tot .k{color:var(--verde);font-weight:600} .kv.tot .v{color:var(--verde)}
+  .subtle{font-size:.78rem;color:var(--tinta-soft);margin:2px 0 12px}
+  .law{background:var(--blanco);border:1px solid var(--linea);border-left:4px solid var(--miel);border-radius:12px;padding:13px 14px;margin-bottom:10px}
+  .law h4{font-size:.95rem;color:var(--verde);margin-bottom:4px;font-family:'Mulish';font-weight:800}
+  .law p{font-size:.87rem;color:var(--tinta-soft)} .law b{color:var(--tinta)}
+  .disc{font-size:.78rem;color:#7a5a1e;background:#FBEAD0;border-radius:10px;padding:10px 12px;margin-bottom:14px;line-height:1.45}
+  .day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:6px}
+  .day-grid .dow{text-align:center;font-size:.68rem;font-weight:800;color:var(--tinta-soft);padding:2px 0}
+  .day-grid .blank{visibility:hidden}
+  .day-grid button{aspect-ratio:1;border:1.5px solid var(--linea);background:var(--blanco);border-radius:9px;
+    font-family:inherit;font-weight:700;font-size:.82rem;color:var(--tinta-soft);cursor:pointer;padding:0}
+  .day-grid button.on{background:var(--verde-ok);border-color:var(--verde-ok);color:#fff}
+  .emergency{background:#F6DDD6;border:1px solid #E3B5AB;border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+  .emergency .n{font-family:'Fraunces',serif;font-size:1.6rem;color:var(--rojo);font-weight:600;line-height:1}
+  .emergency div{font-size:.84rem;color:#7a2e1c}
+  .pill-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  /* historial pagos */
+  .paid-badge{font-size:.7rem;font-weight:800;padding:3px 9px;border-radius:99px;background:#DCEEE2;color:var(--verde-ok)}
+  .unpaid-badge{font-size:.7rem;font-weight:800;padding:3px 9px;border-radius:99px;background:#F6DDD6;color:var(--rojo)}
+  /* checklist cumplimiento */
+  .chk-item{display:flex;align-items:center;gap:12px;background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer}
+  .chk-item .grow{font-size:.92rem;font-weight:600}
+  .chk-item small{display:block;font-weight:400;color:var(--tinta-soft);font-size:.8rem;margin-top:2px}
+  /* print area */
+  #printArea{display:none}
+  @media print{
+    .app,.scrim,.toast,nav.tabs{display:none !important}
+    #printArea{display:block !important}
+    @page{margin:1.5cm}
+  }
+  .doc{font-family:'Mulish',sans-serif;color:#111;max-width:720px;margin:0 auto;font-size:13px;line-height:1.6}
+  .doc h1{font-family:'Fraunces',serif;font-size:20px;color:#1F4035;margin-bottom:2px}
+  .doc h2{font-family:'Fraunces',serif;font-size:15px;color:#1F4035;margin:18px 0 6px}
+  .doc .docbrand{display:flex;align-items:center;gap:10px;border-bottom:2px solid #1F4035;padding-bottom:10px;margin-bottom:18px}
+  .doc .docbrand .s{width:40px;height:40px;border-radius:10px;background:#1F4035;color:#E8A13A;display:grid;place-items:center;font-weight:800}
+  .doc .docbrand small{color:#666}
+  .doc table{width:100%;border-collapse:collapse;margin:6px 0}
+  .doc td{padding:6px 4px;border-bottom:1px solid #eee;vertical-align:top}
+  .doc td.l{color:#666;width:45%}
+  .doc .tot td{border-top:2px solid #1F4035;font-weight:800;font-size:15px;color:#1F4035}
+  .doc .sign{display:flex;justify-content:space-between;margin-top:50px;gap:30px}
+  .doc .sign div{flex:1;text-align:center;border-top:1px solid #333;padding-top:6px;font-size:12px}
+  .doc .fine{font-size:10px;color:#888;margin-top:24px;border-top:1px solid #eee;padding-top:8px}
+  .doc.cert{text-align:center;border:3px solid #1F4035;border-radius:14px;padding:34px}
+  .doc.cert .big{font-family:'Fraunces',serif;font-size:30px;color:#1F4035;margin:10px 0}
+  .doc.cert .name{font-family:'Fraunces',serif;font-size:24px;color:#C9831F;margin:14px 0;border-bottom:1px solid #ccc;display:inline-block;padding:0 30px 6px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="appbar">
+    <div class="top">
+      <div class="brand">
+        <span class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 21v-6h6v6"/></svg></span>
+        <div>
+          <h1>Mi Hogar</h1>
+          <div class="sub" id="dateLbl"></div>
+        </div>
+      </div>
+      <button class="icon-btn" id="menuBtn" aria-label="Opciones">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ACTIVIDADES -->
+    <section class="panel active" id="p-act">
+      <div class="head-row">
+        <h2>Actividades</h2>
+        <div class="meta" id="actMeta"></div>
+      </div>
+      <div class="progress"><i id="actBar" style="width:0"></i></div>
+      <div class="addbar">
+        <input id="actInput" placeholder="Nueva tarea del hogar…" autocomplete="off">
+        <button class="btn btn-add" id="actAdd" aria-label="Agregar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+      <div class="chips" id="actFilters">
+        <button class="fchip on" data-f="todas">Todas</button>
+        <button class="fchip" data-f="pend">Pendientes</button>
+        <button class="fchip" data-f="hechas">Hechas</button>
+      </div>
+      <div id="actList"></div>
+    </section>
+
+    <!-- DESPENSA -->
+    <section class="panel" id="p-desp">
+      <div class="head-row">
+        <h2>Despensa</h2>
+        <div class="meta" id="despMeta"></div>
+      </div>
+      <div class="addbar">
+        <input id="despSearch" placeholder="Buscar producto…" autocomplete="off">
+        <button class="btn btn-add" id="despAdd" aria-label="Agregar producto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+      <div id="despList"></div>
+    </section>
+
+    <!-- RECETAS -->
+    <section class="panel" id="p-rec">
+      <div class="head-row">
+        <h2>Recetas</h2>
+        <div class="meta"><button class="mini-link" id="recAdd">+ Nueva receta</button></div>
+      </div>
+      <div id="recList"></div>
+    </section>
+
+    <!-- QUE COCINO -->
+    <section class="panel" id="p-cook">
+      <div class="head-row">
+        <h2>¿Qué cocino?</h2>
+        <div class="meta">Según tu despensa</div>
+      </div>
+      <div id="cookList"></div>
+    </section>
+
+    <!-- PERSONAL -->
+    <section class="panel" id="p-pers">
+      <div class="head-row">
+        <h2>Personal</h2>
+        <div class="meta" id="persMeta"></div>
+      </div>
+      <div class="seg" id="persSeg">
+        <button class="on" data-pv="sueldo">Sueldo</button>
+        <button data-pv="pagos">Pagos</button>
+        <button data-pv="dias">Días</button>
+        <button data-pv="adelantos">Anticipos</button>
+        <button data-pv="contrato">Contrato</button>
+        <button data-pv="cumpl">Cumplimiento</button>
+        <button data-pv="leyes">Leyes</button>
+        <button data-pv="ayuda">Capacitación</button>
+      </div>
+      <div id="persBody"></div>
+    </section>
+  </main>
+
+  <nav class="tabs" id="tabs">
+    <button class="on" data-tab="p-act">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+      Tareas
+    </button>
+    <button data-tab="p-desp">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>
+      Despensa
+    </button>
+    <button data-tab="p-rec">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16a1 1 0 0 0 1 1h15"/><path d="M8 4v13"/><path d="M8 8h12V5a1 1 0 0 0-1-1H8"/><path d="M8 12h12"/></svg>
+      Recetas
+    </button>
+    <button data-tab="p-cook">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3z"/><path d="M9 20h6M10 16v4M14 16v4"/></svg>
+      Cocinar
+    </button>
+    <button data-tab="p-pers">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.5a4 4 0 0 1 0 7"/></svg>
+      Personal
+    </button>
+  </nav>
+</div>
+
+<!-- generic sheet -->
+<div class="scrim" id="scrim"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+<div id="printArea"></div>
+
+<script>
+/* ============ STORAGE (localStorage con respaldo en memoria) ============ */
+const mem = {};
+const storage = {
+  get(k){ try{ const v=localStorage.getItem(k); return v==null?null:JSON.parse(v);}catch(e){ return k in mem?mem[k]:null; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){ mem[k]=v; } }
+};
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/s$/,'').trim();
+
+/* ============ ESTADO + SEMILLA ============ */
+let state = storage.get('hogar_v1');
+if(!state){
+  state = {
+    activities: [
+      {id:uid(), text:'Aseo general living', who:'Nana', done:false},
+      {id:uid(), text:'Regar el jardín', who:'Jardinero', done:false},
+      {id:uid(), text:'Compras de la semana', who:'Yo', done:false},
+      {id:uid(), text:'Planchar ropa', who:'Nana', done:true},
+    ],
+    pantry: [
+      {id:uid(), name:'Arroz', qty:2, unit:'kg', cat:'Abarrotes', min:1},
+      {id:uid(), name:'Fideos', qty:3, unit:'paq', cat:'Abarrotes', min:1},
+      {id:uid(), name:'Aceite', qty:1, unit:'botella', cat:'Abarrotes', min:1},
+      {id:uid(), name:'Sal', qty:1, unit:'paq', cat:'Abarrotes', min:1},
+      {id:uid(), name:'Lentejas', qty:1, unit:'paq', cat:'Abarrotes', min:1},
+      {id:uid(), name:'Huevos', qty:12, unit:'un', cat:'Refrigerados', min:6},
+      {id:uid(), name:'Cebolla', qty:4, unit:'un', cat:'Verduras', min:2},
+      {id:uid(), name:'Tomate', qty:5, unit:'un', cat:'Verduras', min:2},
+      {id:uid(), name:'Ajo', qty:1, unit:'cabeza', cat:'Verduras', min:1},
+      {id:uid(), name:'Papas', qty:2, unit:'kg', cat:'Verduras', min:1},
+      {id:uid(), name:'Zanahoria', qty:4, unit:'un', cat:'Verduras', min:2},
+      {id:uid(), name:'Cilantro', qty:1, unit:'atado', cat:'Verduras', min:1},
+      {id:uid(), name:'Pan', qty:1, unit:'kg', cat:'Panadería', min:1},
+    ],
+    recipes: [
+      {id:uid(), name:'Tallarines con salsa', mins:25, ings:['Fideos','Tomate','Cebolla','Ajo','Aceite','Sal'], steps:['Hervir agua con sal y cocer los fideos.','Sofreír cebolla y ajo en aceite.','Agregar el tomate picado y cocinar 10 min.','Mezclar con los fideos y servir.']},
+      {id:uid(), name:'Arroz con huevo', mins:20, ings:['Arroz','Huevos','Aceite','Sal'], steps:['Cocer el arroz con sal.','Freír los huevos en aceite.','Servir el arroz con el huevo encima.']},
+      {id:uid(), name:'Lentejas guisadas', mins:40, ings:['Lentejas','Cebolla','Zanahoria','Ajo','Aceite','Sal'], steps:['Sofreír cebolla, ajo y zanahoria.','Agregar las lentejas y agua.','Cocinar a fuego lento 30 min.','Salar y servir.']},
+      {id:uid(), name:'Ensalada chilena', mins:10, ings:['Tomate','Cebolla','Cilantro','Aceite','Sal'], steps:['Cortar tomate en gajos y cebolla en pluma.','Lavar la cebolla con agua.','Aliñar con aceite, sal y cilantro.']},
+      {id:uid(), name:'Tortilla de verduras', mins:20, ings:['Huevos','Cebolla','Zanahoria','Aceite','Sal'], steps:['Picar y sofreír las verduras.','Batir los huevos con sal.','Verter sobre las verduras y cuajar por ambos lados.']},
+      {id:uid(), name:'Charquicán', mins:45, ings:['Papas','Cebolla','Zanahoria','Carne molida','Zapallo','Aceite','Sal'], steps:['Sofreír cebolla y carne.','Agregar papas, zapallo y zanahoria en cubos.','Cocinar con agua hasta deshacer.','Servir con huevo frito (opcional).']},
+    ],
+    cooking:{}
+  };
+  save();
+}
+function save(){ storage.set('hogar_v1', state); }
+
+/* ---- migración: módulo Personal (datos por defecto si faltan) ---- */
+if(!state.employees){ state.employees = [{id:uid(), name:'Persona 1', role:'Asesora del hogar', base:553553, modalidad:'Puertas afuera'}]; }
+state.dias  = state.dias  || {};   // {empId:{ 'YYYY-MM':[días] }}
+state.movs  = state.movs  || [];   // anticipos y préstamos
+state.liq   = state.liq   || {};   // {empId:{ 'YYYY-MM':{dias,loco,colacion,otros} }}
+state.firstaid = state.firstaid || []; // módulos de capacitación leídos
+state.config = state.config || { imm:553553, afp:11.44, salud:7, indem:1.11, cesantia:3.0, mutual:0.95, sis:1.49, immFecha:'mayo 2026' };
+state.hogar = state.hogar || { empNombre:'', empRut:'', empDomicilio:'', empComuna:'' }; // datos del empleador/hogar
+state.pagos = state.pagos || []; // [{id,empId,mes,monto,fecha}]
+state.contratos = state.contratos || {}; // {empId:{rut,domicilio,fechaInicio,lugar,funciones,jornada,horario}}
+state.cumpl = state.cumpl || {}; // {empId:{contrato,registroDT,cotizaciones,liquidacion,prevSalud}}
+state.cert = state.cert || {}; // {empId:'YYYY-MM-DD' fecha de certificado emitido}
+save();
+
+/* ============ HELPERS DESPENSA ============ */
+function pantryHas(ingName){
+  const n = norm(ingName);
+  return state.pantry.find(p => p.qty>0 && (norm(p.name)===n || norm(p.name).includes(n) || n.includes(norm(p.name))));
+}
+
+/* ============ RENDER: ACTIVIDADES ============ */
+let actFilter='todas';
+function renderAct(){
+  const list = document.getElementById('actList');
+  const total = state.activities.length;
+  const done = state.activities.filter(a=>a.done).length;
+  document.getElementById('actMeta').textContent = total ? `${done} de ${total} listas` : '';
+  document.getElementById('actBar').style.width = total ? (done/total*100)+'%' : '0';
+  let items = state.activities;
+  if(actFilter==='pend') items = items.filter(a=>!a.done);
+  if(actFilter==='hechas') items = items.filter(a=>a.done);
+  // pendientes primero
+  items = [...items].sort((a,b)=> (a.done?1:0)-(b.done?1:0));
+  if(!items.length){ list.innerHTML = empty('Sin tareas por aquí','Agrega la primera tarea del hogar arriba.'); return; }
+  list.innerHTML = items.map(a=>`
+    <div class="card"><div class="row">
+      <div class="check ${a.done?'on':''}" data-act-check="${a.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="grow">
+        <div class="ttl ${a.done?'done':''}">${esc(a.text)}</div>
+        ${a.who?`<div class="tags"><span class="tag">${esc(a.who)}</span></div>`:''}
+      </div>
+      <button class="x" data-act-del="${a.id}" aria-label="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div></div>`).join('');
+}
+
+/* ============ RENDER: DESPENSA ============ */
+let despQ='';
+function renderDesp(){
+  const list = document.getElementById('despList');
+  const low = state.pantry.filter(p=>p.qty<=p.min).length;
+  document.getElementById('despMeta').innerHTML = state.pantry.length
+    ? `${state.pantry.length} productos${low?` · <b style="color:var(--rojo)">${low} por reponer</b>`:''}` : '';
+  updateBadges();
+  let items = state.pantry.filter(p=>!despQ || norm(p.name).includes(norm(despQ)));
+  if(!items.length){ list.innerHTML = empty('Despensa vacía', despQ?'Sin resultados para tu búsqueda.':'Agrega productos con el botón +'); return; }
+  const cats = [...new Set(items.map(p=>p.cat||'Otros'))];
+  list.innerHTML = cats.map(c=>{
+    const rows = items.filter(p=>(p.cat||'Otros')===c).map(p=>{
+      const lowf = p.qty<=p.min;
+      return `<div class="card"><div class="row">
+        <div class="grow">
+          <div class="ttl">${esc(p.name)}</div>
+          <div class="tags">${lowf?`<span class="tag rojo">Queda poco</span>`:`<span class="tag">En stock</span>`}</div>
+        </div>
+        <div class="stepper">
+          <button data-desp-minus="${p.id}">−</button>
+          <div class="q">${fmtQty(p.qty)}<br><small>${esc(p.unit||'')}</small></div>
+          <button data-desp-plus="${p.id}">+</button>
+        </div>
+        <button class="x" data-desp-del="${p.id}" aria-label="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div></div>`;
+    }).join('');
+    return `<div class="group-lbl">${esc(c)}</div>${rows}`;
+  }).join('');
+}
+function fmtQty(q){ return Number.isInteger(q)?q:q.toFixed(1); }
+
+/* ============ RENDER: RECETAS ============ */
+function renderRec(){
+  const list = document.getElementById('recList');
+  if(!state.recipes.length){ list.innerHTML = empty('Sin recetas','Crea tu primera receta con "+ Nueva receta".'); return; }
+  list.innerHTML = state.recipes.map(r=>{
+    const have = r.ings.filter(i=>pantryHas(i)).length;
+    return `<div class="card" data-open-rec="${r.id}" style="cursor:pointer">
+      <div class="row">
+        <div class="grow">
+          <div class="recipe-ttl">${esc(r.name)}</div>
+          <div class="tags"><span class="tag miel">⏱ ${r.mins||'—'} min</span><span class="tag">${r.ings.length} ingredientes</span><span class="tag">${have}/${r.ings.length} en despensa</span></div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--tinta-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ============ RENDER: QUE COCINO ============ */
+function renderCook(){
+  const list = document.getElementById('cookList');
+  if(!state.recipes.length){ list.innerHTML = empty('Sin recetas para evaluar','Agrega recetas en la pestaña Recetas.'); return; }
+  const scored = state.recipes.map(r=>{
+    const missing = r.ings.filter(i=>!pantryHas(i));
+    return {r, missing, have:r.ings.length-missing.length, pct:Math.round((r.ings.length-missing.length)/r.ings.length*100)};
+  }).sort((a,b)=> b.pct-a.pct || a.missing.length-b.missing.length);
+
+  const ready = scored.filter(s=>s.missing.length===0);
+  const close = scored.filter(s=>s.missing.length>0 && s.missing.length<=2);
+  const rest  = scored.filter(s=>s.missing.length>2);
+
+  let html='';
+  if(ready.length){ html += `<div class="group-lbl">✓ Puedes cocinar ahora</div>` + ready.map(card).join(''); }
+  if(close.length){ html += `<div class="group-lbl">Te falta poco</div>` + close.map(card).join(''); }
+  if(rest.length){ html += `<div class="group-lbl">Necesitas comprar más</div>` + rest.map(card).join(''); }
+  list.innerHTML = html;
+
+  function card(s){
+    const color = s.pct===100?'var(--verde-ok)':s.pct>=60?'var(--miel)':'var(--rojo)';
+    return `<div class="card" data-open-rec="${s.r.id}" style="cursor:pointer">
+      <div class="row">
+        <div class="grow">
+          <div class="recipe-ttl">${esc(s.r.name)}</div>
+          <div class="barmini"><i style="width:${s.pct}%;background:${color}"></i></div>
+          ${s.missing.length
+            ? `<div class="miss">Te falta: <b>${s.missing.map(esc).join(', ')}</b></div>`
+            : `<div class="miss" style="color:var(--verde-ok)">¡Tienes todos los ingredientes!</div>`}
+        </div>
+        <div class="pct" style="color:${color}">${s.pct}%</div>
+      </div>
+    </div>`;
+  }
+}
+
+/* ============ DETALLE DE RECETA (sheet tickeable) ============ */
+function openRecipe(id){
+  const r = state.recipes.find(x=>x.id===id); if(!r) return;
+  const ck = state.cooking[id] || {ings:[],steps:[]};
+  state.cooking[id]=ck;
+  const ingHtml = r.ings.map((i,idx)=>{
+    const has = pantryHas(i);
+    const on = ck.ings.includes(idx);
+    return `<div class="ing-line">
+      <div class="check ${on?'on':''}" data-ck-ing="${idx}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="grow ttl ${on?'done':''}" style="font-weight:600">${esc(i)}</div>
+      <span class="ing-have ${has?'yes':'no'}">${has?'en despensa':'falta'}</span>
+    </div>`;
+  }).join('');
+  const stepHtml = r.steps.map((s,idx)=>{
+    const on = ck.steps.includes(idx);
+    return `<div class="step-line" data-ck-step="${idx}">
+      <div class="step-n">${idx+1}</div>
+      <div class="step-txt ${on?'done':''}">${esc(s)}</div>
+      <div class="check ${on?'on':''}" style="width:22px;height:22px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+    </div>`;
+  }).join('');
+  openSheet(`
+    <h3>${esc(r.name)}</h3>
+    <div class="tags" style="margin-bottom:14px"><span class="tag miel">⏱ ${r.mins||'—'} min</span><span class="tag">${r.ings.length} ingredientes</span></div>
+    <div class="group-lbl" style="margin-top:0">Ingredientes</div>
+    ${ingHtml}
+    <div class="group-lbl">Preparación</div>
+    ${stepHtml}
+    <div class="sheet-actions" style="margin-top:16px">
+      <button class="btn btn-line" data-rec-del="${r.id}">Eliminar</button>
+      <button class="btn btn-pri" data-rec-cooked="${r.id}">Cociné esto ✓</button>
+    </div>
+    <p style="font-size:.76rem;color:var(--tinta-soft);text-align:center;margin-top:10px">Al marcar "Cociné esto" se descuenta 1 de cada ingrediente que tengas en la despensa.</p>
+  `);
+  // wire ticks
+  document.querySelectorAll('[data-ck-ing]').forEach(el=>el.addEventListener('click',()=>{
+    const i=+el.dataset.ckIng; toggle(ck.ings,i); save(); openRecipe(id);
+  }));
+  document.querySelectorAll('[data-ck-step]').forEach(el=>el.addEventListener('click',()=>{
+    const i=+el.dataset.ckStep; toggle(ck.steps,i); save(); openRecipe(id);
+  }));
+  document.querySelector('[data-rec-cooked]').addEventListener('click',()=>{
+    let n=0;
+    r.ings.forEach(i=>{ const p=pantryHas(i); if(p){ p.qty=Math.max(0,p.qty-1); n++; } });
+    state.cooking[id]={ings:[],steps:[]}; save(); closeSheet(); renderAll();
+    toast(n?`Listo 🍳 Descontados ${n} ingredientes`:'¡Buen provecho! 🍳');
+  });
+  document.querySelector('[data-rec-del]').addEventListener('click',()=>{
+    if(confirm('¿Eliminar esta receta?')){ state.recipes=state.recipes.filter(x=>x.id!==id); delete state.cooking[id]; save(); closeSheet(); renderAll(); }
+  });
+}
+function toggle(arr,v){ const i=arr.indexOf(v); i>=0?arr.splice(i,1):arr.push(v); }
+
+/* ============ SHEETS: nuevo producto / nueva receta / menú ============ */
+function sheetNewPantry(){
+  openSheet(`
+    <h3>Agregar a la despensa</h3>
+    <div class="field"><label>Producto</label><input id="np-name" placeholder="Ej: Leche" autocomplete="off"></div>
+    <div class="two">
+      <div class="field"><label>Cantidad</label><input id="np-qty" type="number" value="1" min="0" step="0.5"></div>
+      <div class="field"><label>Unidad</label><input id="np-unit" placeholder="un, kg, paq…" value="un"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Categoría</label><select id="np-cat">
+        <option>Abarrotes</option><option>Verduras</option><option>Frutas</option><option>Refrigerados</option>
+        <option>Congelados</option><option>Panadería</option><option>Bebidas</option><option>Limpieza</option><option>Otros</option>
+      </select></div>
+      <div class="field"><label>Avisar si queda ≤</label><input id="np-min" type="number" value="1" min="0" step="0.5"></div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" data-close>Cancelar</button>
+      <button class="btn btn-pri" id="np-save">Guardar</button>
+    </div>`);
+  document.getElementById('np-save').addEventListener('click',()=>{
+    const name=val('np-name'); if(!name) return shake('np-name');
+    state.pantry.push({id:uid(),name,qty:parseFloat(val('np-qty'))||0,unit:val('np-unit')||'un',cat:val('np-cat'),min:parseFloat(val('np-min'))||0});
+    save(); closeSheet(); renderAll(); toast('Producto agregado');
+  });
+}
+function sheetNewRecipe(){
+  openSheet(`
+    <h3>Nueva receta</h3>
+    <div class="field"><label>Nombre</label><input id="nr-name" placeholder="Ej: Sopa de verduras" autocomplete="off"></div>
+    <div class="field" style="max-width:140px"><label>Tiempo (min)</label><input id="nr-mins" type="number" value="20" min="1"></div>
+    <div class="field"><label>Ingredientes (uno por línea)</label><textarea id="nr-ings" rows="5" placeholder="Zanahoria&#10;Apio&#10;Papa&#10;Sal"></textarea></div>
+    <div class="field"><label>Preparación (un paso por línea)</label><textarea id="nr-steps" rows="5" placeholder="Picar las verduras&#10;Hervir 20 min&#10;Salar y servir"></textarea></div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" data-close>Cancelar</button>
+      <button class="btn btn-pri" id="nr-save">Crear receta</button>
+    </div>`);
+  document.getElementById('nr-save').addEventListener('click',()=>{
+    const name=val('nr-name'); if(!name) return shake('nr-name');
+    const ings=val('nr-ings').split('\n').map(s=>s.trim()).filter(Boolean);
+    const steps=val('nr-steps').split('\n').map(s=>s.trim()).filter(Boolean);
+    if(!ings.length) return shake('nr-ings');
+    state.recipes.push({id:uid(),name,mins:parseInt(val('nr-mins'))||null,ings,steps});
+    save(); closeSheet(); renderAll(); toast('Receta creada'); go('p-rec');
+  });
+}
+function sheetMenu(){
+  openSheet(`
+    <h3>Opciones</h3>
+    <button class="btn btn-line" style="width:100%;justify-content:flex-start;margin-bottom:10px" id="op-export">⬇ Exportar mis datos (copia de seguridad)</button>
+    <button class="btn btn-line" style="width:100%;justify-content:flex-start;margin-bottom:10px" id="op-reset">↺ Restablecer datos de ejemplo</button>
+    <button class="btn btn-line" style="width:100%;justify-content:flex-start;color:var(--rojo)" id="op-clear">🗑 Borrar todo</button>
+    <div class="sheet-actions" style="margin-top:14px"><button class="btn btn-ghost" data-close>Cerrar</button></div>`);
+  document.getElementById('op-export').addEventListener('click',()=>{
+    const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='mi-hogar-respaldo.json'; a.click(); closeSheet();
+  });
+  document.getElementById('op-reset').addEventListener('click',()=>{ if(confirm('¿Volver a los datos de ejemplo? Se reemplaza lo actual.')){ storage.set('hogar_v1',null); location.reload(); }});
+  document.getElementById('op-clear').addEventListener('click',()=>{ if(confirm('¿Borrar TODO? No se puede deshacer.')){ state.activities=[];state.pantry=[];state.recipes=[];state.cooking={}; save(); closeSheet(); renderAll(); }});
+}
+
+/* ============ SHEET CORE ============ */
+const scrim=document.getElementById('scrim'), sheet=document.getElementById('sheet');
+function openSheet(html){ sheet.innerHTML=html; scrim.classList.add('open');
+  sheet.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeSheet)); }
+function closeSheet(){ scrim.classList.remove('open'); }
+scrim.addEventListener('click',e=>{ if(e.target===scrim) closeSheet(); });
+
+/* ============ UTILES ============ */
+function esc(s){ return (s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function val(id){ return document.getElementById(id).value.trim(); }
+function shake(id){ const el=document.getElementById(id); el.style.borderColor='var(--rojo)'; el.focus(); }
+function empty(t,s){ return `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M9 15h6"/></svg><div style="font-weight:700;color:var(--tinta);margin-bottom:3px">${t}</div>${s}</div>`; }
+let toastT; function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2200); }
+function updateBadges(){
+  const low = state.pantry.filter(p=>p.qty<=p.min).length;
+  const btn = document.querySelector('[data-tab="p-desp"]');
+  let b = btn.querySelector('.navbadge'); 
+  if(low){ if(!b){ b=document.createElement('span'); b.className='navbadge'; btn.appendChild(b);} b.textContent=low; }
+  else if(b){ b.remove(); }
+}
+
+/* ============ PERSONAL: remuneración, días, anticipos, leyes, 1ros auxilios ============ */
+const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+function clp(n){ return '$'+Math.round(n||0).toLocaleString('es-CL'); }
+function mKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function mLabel(k){ const [y,m]=k.split('-'); return MESES[+m-1]+' '+y; }
+function lastMonths(n){ const a=[],d=new Date(); for(let i=0;i<n;i++) a.push(mKey(new Date(d.getFullYear(),d.getMonth()-i,1))); return a; }
+
+let persView='sueldo', selEmp=null, selMonth=mKey(new Date());
+function getEmp(){ return state.employees.find(e=>e.id===selEmp); }
+function diasCount(empId,m){ const x=(state.dias[empId]||{})[m]; return x?x.length:0; }
+function suggestDeduct(empId,m){
+  let t=0; state.movs.filter(x=>x.empId===empId).forEach(x=>{
+    if(x.tipo==='anticipo' && x.mes===m) t+=x.monto;
+    if(x.tipo==='prestamo' && x.saldo>0) t+=Math.min(x.saldo,x.cuota);
+  }); return t;
+}
+
+function renderPersonal(){
+  if(!selEmp && state.employees.length) selEmp=state.employees[0].id;
+  document.getElementById('persMeta').textContent = state.employees.length ? `${state.employees.length} ${state.employees.length===1?'persona':'personas'}` : '';
+  const body=document.getElementById('persBody');
+  body.innerHTML = ({sueldo:viewSueldo, pagos:viewPagos, dias:viewDias, adelantos:viewAdelantos, contrato:viewContrato, cumpl:viewCumpl, leyes:viewLeyes, ayuda:viewAyuda}[persView])();
+  wirePersonal();
+}
+function empSelector(extra){
+  if(!state.employees.length) return '';
+  return `<div class="mono-select">
+    <select id="empSel">${state.employees.map(e=>`<option value="${e.id}" ${e.id===selEmp?'selected':''}>${esc(e.name)} · ${esc(e.role||'')}</option>`).join('')}</select>
+    ${extra||''}
+    <button class="btn btn-ghost btn-sm" id="empNew">+ Persona</button>
+  </div>`;
+}
+function noEmp(){ return `${empty('Sin personas registradas','Agrega a la persona que trabaja en tu hogar.')}<div style="text-align:center"><button class="btn btn-pri" id="empNew">+ Agregar persona</button></div>`; }
+
+/* ---- SUELDO / liquidación ---- */
+function viewSueldo(){
+  if(!state.employees.length) return noEmp();
+  const e=getEmp();
+  const lv={ dias:diasCount(e.id,selMonth)||30, loco:e.loco||0, colacion:e.colacion||0, otros:suggestDeduct(e.id,selMonth) };
+  const monthOpts=lastMonths(8).map(k=>`<option value="${k}" ${k===selMonth?'selected':''}>${mLabel(k)}</option>`).join('');
+  return `
+    ${empSelector()}
+    <div class="mono-select"><select id="persMonth">${monthOpts}</select></div>
+    <div class="card">
+      <div class="kv" style="border-bottom:0;padding-top:0"><span class="k">Sueldo base</span><span class="v">${clp(e.base)} <button class="mini-link" id="empEdit" style="font-size:.78rem">editar</button></span></div>
+      <div class="two">
+        <div class="field"><label>Días trabajados (de 30)</label><input id="liqDias" type="number" min="0" max="31" value="${lv.dias}"></div>
+        <div class="field"><label>Locomoción ($)</label><input id="liqLoco" type="number" min="0" value="${lv.loco}"></div>
+      </div>
+      <div class="two">
+        <div class="field"><label>Colación ($)</label><input id="liqColacion" type="number" min="0" value="${lv.colacion}"></div>
+        <div class="field"><label>Anticipos/préstamos ($)</label><input id="liqOtros" type="number" min="0" value="${lv.otros}"></div>
+      </div>
+    </div>
+    <div id="liqResult"></div>
+    <div style="text-align:center;margin-top:10px"><button class="mini-link" id="cfgBtn">⚙ Configurar tasas legales (sueldo mínimo, AFP, salud…)</button></div>
+    <div class="disc" style="margin-top:14px"><b>Importante:</b> esta es una calculadora <b>referencial</b> para trabajadoras/es de casa particular. Los montos finales dependen de la AFP, plan de salud y situación de cada persona. No reemplaza a un contador ni a la liquidación oficial. Verifica los valores vigentes en la Dirección del Trabajo (dt.gob.cl).</div>
+  `;
+}
+function computeLiq(e,v){
+  const c=state.config;
+  const imp=Math.round(e.base*(v.dias/30));
+  const noImp=(+v.loco||0)+(+v.colacion||0);
+  const dAfp=Math.round(imp*c.afp/100), dSal=Math.round(imp*c.salud/100);
+  const otros=+v.otros||0;
+  const liquido=imp-dAfp-dSal-otros+noImp;
+  const apIn=Math.round(imp*c.indem/100), apCe=Math.round(imp*c.cesantia/100), apMu=Math.round(imp*c.mutual/100), apSi=Math.round(imp*c.sis/100);
+  const aportes=apIn+apCe+apMu+apSi;
+  return {imp,noImp,dAfp,dSal,otros,liquido,apIn,apCe,apMu,apSi,aportes,costo:imp+noImp+aportes};
+}
+function showLiq(){
+  const e=getEmp(); if(!e) return;
+  const v={dias:+val('liqDias')||0, loco:+val('liqLoco')||0, colacion:+val('liqColacion')||0, otros:+val('liqOtros')||0};
+  e.loco=v.loco; e.colacion=v.colacion; save();
+  const r=computeLiq(e,v), c=state.config;
+  document.getElementById('liqResult').innerHTML=`
+    <div class="group-lbl">Liquidación · lo que recibe</div>
+    <div class="card">
+      <div class="kv"><span class="k">Sueldo imponible (${v.dias}/30 días)</span><span class="v">${clp(r.imp)}</span></div>
+      <div class="kv pos"><span class="k">Locomoción + colación (no imponible)</span><span class="v">+${clp(r.noImp)}</span></div>
+      <div class="kv neg"><span class="k">AFP (${c.afp}%)</span><span class="v">−${clp(r.dAfp)}</span></div>
+      <div class="kv neg"><span class="k">Salud (${c.salud}%)</span><span class="v">−${clp(r.dSal)}</span></div>
+      <div class="kv neg"><span class="k">Anticipos / préstamos</span><span class="v">−${clp(r.otros)}</span></div>
+      <div class="kv tot"><span class="k">Líquido a pagar</span><span class="v">${clp(r.liquido)}</span></div>
+    </div>
+    <div class="group-lbl">Costo para el empleador</div>
+    <div class="card">
+      <div class="kv"><span class="k">Indemnización a todo evento (${c.indem}%)</span><span class="v">${clp(r.apIn)}</span></div>
+      <div class="kv"><span class="k">Seguro de cesantía / AFC (${c.cesantia}%)</span><span class="v">${clp(r.apCe)}</span></div>
+      <div class="kv"><span class="k">Seguro accidentes / mutual (${c.mutual}%)</span><span class="v">${clp(r.apMu)}</span></div>
+      <div class="kv"><span class="k">Seguro invalidez SIS (${c.sis}%)</span><span class="v">${clp(r.apSi)}</span></div>
+      <div class="kv tot"><span class="k">Costo total mensual</span><span class="v">${clp(r.costo)}</span></div>
+    </div>`;
+  // estado de pago + acciones
+  const pago=state.pagos.find(p=>p.empId===e.id && p.mes===selMonth);
+  const acts=document.createElement('div');
+  acts.innerHTML=`
+    ${pago?`<div class="card" style="display:flex;align-items:center;justify-content:space-between"><span><span class="paid-badge">✓ Pagado</span> el ${pago.fecha}</span><b>${clp(pago.monto)}</b></div>`:''}
+    <div class="pill-row" style="margin-top:6px">
+      <button class="btn btn-pri btn-sm" id="pdfLiq" style="flex:1">📄 Liquidación PDF</button>
+      <button class="btn ${pago?'btn-line':'btn-ghost'} btn-sm" id="togglePago" style="flex:1">${pago?'Quitar pago':'Marcar pagado'}</button>
+    </div>`;
+  document.getElementById('liqResult').appendChild(acts);
+  document.getElementById('pdfLiq').addEventListener('click',()=>printLiquidacion(e,selMonth,r));
+  document.getElementById('togglePago').addEventListener('click',()=>{
+    if(pago){ state.pagos=state.pagos.filter(x=>x!==pago); }
+    else { state.pagos.push({id:uid(),empId:e.id,mes:selMonth,monto:r.liquido,fecha:new Date().toISOString().slice(0,10)}); toast('Pago registrado'); }
+    save(); showLiq();
+  });
+}
+
+/* ---- DÍAS TRABAJADOS ---- */
+function viewDias(){
+  if(!state.employees.length) return noEmp();
+  const e=getEmp();
+  const monthOpts=lastMonths(8).map(k=>`<option value="${k}" ${k===selMonth?'selected':''}>${mLabel(k)}</option>`).join('');
+  const [y,m]=selMonth.split('-').map(Number);
+  const dim=new Date(y,m,0).getDate();
+  const first=new Date(y,m-1,1).getDay(); // 0 dom
+  const worked=((state.dias[e.id]||{})[selMonth])||[];
+  const dows=['D','L','M','M','J','V','S'].map(d=>`<div class="dow">${d}</div>`).join('');
+  let cells=''; for(let i=0;i<first;i++) cells+=`<div class="blank"></div>`;
+  for(let d=1;d<=dim;d++) cells+=`<button data-day="${d}" class="${worked.includes(d)?'on':''}">${d}</button>`;
+  return `
+    ${empSelector()}
+    <div class="mono-select"><select id="persMonth">${monthOpts}</select></div>
+    <div class="card">
+      <div class="kv" style="border-bottom:0;padding-top:0"><span class="k">Días marcados</span><span class="v" id="diasCount">${worked.length}</span></div>
+      <div class="pill-row">
+        <button class="btn btn-ghost btn-sm" id="diasLV">Marcar L a V</button>
+        <button class="btn btn-ghost btn-sm" id="diasAll">Todos</button>
+        <button class="btn btn-line btn-sm" id="diasClear">Limpiar</button>
+      </div>
+      <div class="day-grid">${dows}${cells}</div>
+    </div>
+    <p class="subtle">Toca los días en que la persona trabajó. El total se usa automáticamente en el cálculo del sueldo.</p>`;
+}
+
+/* ---- ANTICIPOS / PRÉSTAMOS ---- */
+function viewAdelantos(){
+  if(!state.employees.length) return noEmp();
+  const e=getEmp();
+  const list=state.movs.filter(x=>x.empId===e.id).sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const cards = list.length ? list.map(x=>{
+    if(x.tipo==='anticipo') return `<div class="card"><div class="row">
+        <div class="grow"><div class="ttl">${clp(x.monto)} · Anticipo</div><div class="tags"><span class="tag miel">${mLabel(x.mes)}</span></div></div>
+        <button class="x" data-mov-del="${x.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div>`;
+    const pagado=x.monto-x.saldo, pct=Math.round(pagado/x.monto*100);
+    return `<div class="card"><div class="row">
+        <div class="grow"><div class="ttl">${clp(x.monto)} · Préstamo</div>
+          <div class="tags"><span class="tag">${x.cuotas} cuotas de ${clp(x.cuota)}</span><span class="tag ${x.saldo>0?'rojo':''}">${x.saldo>0?'Saldo '+clp(x.saldo):'Pagado'}</span></div>
+          <div class="barmini"><i style="width:${pct}%;background:var(--verde-ok)"></i></div></div>
+        <button class="x" data-mov-del="${x.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        ${x.saldo>0?`<button class="btn btn-ghost btn-sm" data-mov-pay="${x.id}" style="width:100%;margin-top:8px">Registrar pago de cuota (${clp(Math.min(x.saldo,x.cuota))})</button>`:''}
+      </div>`;
+  }).join('') : empty('Sin movimientos','Registra anticipos o préstamos para esta persona.');
+  return `
+    ${empSelector()}
+    <div class="pill-row">
+      <button class="btn btn-pri btn-sm" id="newAnt">+ Anticipo</button>
+      <button class="btn btn-ghost btn-sm" id="newPres">+ Préstamo</button>
+    </div>
+    ${cards}
+    <p class="subtle">El total pendiente del mes se sugiere automáticamente como descuento en la pestaña <b>Sueldo</b>.</p>`;
+}
+
+/* ---- PAGOS / HISTORIAL ---- */
+function viewPagos(){
+  if(!state.employees.length) return noEmp();
+  const e=getEmp();
+  const list=state.pagos.filter(p=>p.empId===e.id).sort((a,b)=>b.mes.localeCompare(a.mes));
+  const year=String(new Date().getFullYear());
+  const totalAno=list.filter(p=>p.mes.startsWith(year)).reduce((s,p)=>s+p.monto,0);
+  const cards=list.length?list.map(p=>`<div class="card"><div class="row">
+      <div class="grow"><div class="ttl">${mLabel(p.mes)}</div><div class="tags"><span class="paid-badge">Pagado ${p.fecha}</span></div></div>
+      <b style="white-space:nowrap">${clp(p.monto)}</b>
+      <button class="x" data-pago-del="${p.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div></div>`).join(''):empty('Sin pagos registrados','Marca un mes como pagado desde la pestaña Sueldo.');
+  return `${empSelector()}
+    <div class="card"><div class="kv" style="border-bottom:0;padding:0"><span class="k">Pagado en ${year}</span><span class="v">${clp(totalAno)}</span></div></div>
+    <div class="group-lbl">Historial de pagos</div>
+    ${cards}`;
+}
+
+/* ---- CONTRATO ---- */
+function viewContrato(){
+  if(!state.employees.length) return noEmp();
+  const e=getEmp(), h=state.hogar, c=state.contratos[e.id]||{};
+  const hogarOk=h.empNombre&&h.empRut;
+  return `${empSelector()}
+    <div class="card"><div class="row"><div class="grow"><div class="ttl">Datos del hogar (empleador)</div><div class="subtle" style="margin:0">${hogarOk?esc(h.empNombre)+' · '+esc(h.empRut):'Faltan datos del empleador'}</div></div>
+      <button class="btn btn-ghost btn-sm" id="editHogar">${hogarOk?'Editar':'Completar'}</button></div></div>
+    <div class="card"><div class="row"><div class="grow"><div class="ttl">Datos del contrato</div><div class="subtle" style="margin:0">${c.fechaInicio?'Inicio '+fmtFecha(c.fechaInicio):'Sin completar'}</div></div>
+      <button class="btn btn-ghost btn-sm" id="editContrato">${c.fechaInicio?'Editar':'Completar'}</button></div></div>
+    <button class="btn btn-pri" id="genContrato" style="width:100%;margin-top:6px">📄 Generar contrato PDF</button>
+    <div class="disc" style="margin-top:14px"><b>Recuerda:</b> el contrato debe <b>registrarse en la Dirección del Trabajo dentro de 15 días</b> (dt.gob.cl). Es un modelo referencial; revísalo con un asesor antes de firmar.</div>`;
+}
+
+/* ---- CUMPLIMIENTO ---- */
+const CUMPL=[
+  {k:'contrato', t:'Contrato firmado', s:'Contrato escrito y firmado por ambas partes.'},
+  {k:'registroDT', t:'Registrado en la DT', s:'Registrado en la Dirección del Trabajo (dentro de 15 días).'},
+  {k:'cotizaciones', t:'Cotizaciones del mes pagadas', s:'AFP, salud, cesantía e indemnización al día.'},
+  {k:'liquidacion', t:'Liquidación entregada', s:'Comprobante de sueldo entregado a la trabajadora.'},
+  {k:'prevSalud', t:'Previsión y salud activas', s:'AFP/IPS y Fonasa/Isapre vigentes.'},
+];
+function viewCumpl(){
+  if(!state.employees.length) return noEmp();
+  const e=getEmp(), st=state.cumpl[e.id]||{};
+  const done=CUMPL.filter(i=>st[i.k]).length;
+  return `${empSelector()}
+    <div class="kv" style="border-bottom:0"><span class="k">Cumplimiento</span><span class="v">${done}/${CUMPL.length}</span></div>
+    <div class="progress"><i style="width:${done/CUMPL.length*100}%"></i></div>
+    ${CUMPL.map(i=>`<div class="chk-item" data-cumpl="${i.k}">
+      <div class="check ${st[i.k]?'on':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="grow">${i.t}<small>${i.s}</small></div>
+    </div>`).join('')}
+    <div class="disc" style="margin-top:6px">Marca lo que ya tienes en regla. Tener todo al día es la base del respaldo de Nanys.</div>`;
+}
+
+/* ---- GENERADORES PDF (vista imprimible → Guardar como PDF) ---- */
+function fmtFecha(iso){ if(!iso) return '____________'; const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; }
+function printDoc(html){ document.getElementById('printArea').innerHTML=html; setTimeout(()=>window.print(),60); }
+function docBrand(t,s){ return `<div class="docbrand"><div class="s">N</div><div><h1>${t}</h1><small>${s||'Mi Hogar · Nanys'}</small></div></div>`; }
+function printLiquidacion(e,mes,r){
+  const h=state.hogar, c=state.config;
+  printDoc(`<div class="doc">${docBrand('Liquidación de sueldo','Comprobante de remuneraciones · Nanys')}
+    <table>
+      <tr><td class="l">Empleador(a)</td><td>${esc(h.empNombre||'—')}${h.empRut?' · RUT '+esc(h.empRut):''}</td></tr>
+      <tr><td class="l">Domicilio</td><td>${esc(h.empDomicilio||'—')} ${esc(h.empComuna||'')}</td></tr>
+      <tr><td class="l">Trabajador(a)</td><td>${esc(e.name)} · ${esc(e.role||'')}</td></tr>
+      <tr><td class="l">Período</td><td>${mLabel(mes)}</td></tr>
+    </table>
+    <h2>Haberes</h2><table>
+      <tr><td class="l">Sueldo base imponible</td><td>${clp(r.imp)}</td></tr>
+      <tr><td class="l">Locomoción / colación (no imponible)</td><td>${clp(r.noImp)}</td></tr></table>
+    <h2>Descuentos legales</h2><table>
+      <tr><td class="l">AFP (${c.afp}%)</td><td>− ${clp(r.dAfp)}</td></tr>
+      <tr><td class="l">Salud (${c.salud}%)</td><td>− ${clp(r.dSal)}</td></tr>
+      <tr><td class="l">Anticipos / préstamos</td><td>− ${clp(r.otros)}</td></tr></table>
+    <table><tr class="tot"><td>LÍQUIDO A PAGAR</td><td>${clp(r.liquido)}</td></tr></table>
+    <div class="sign"><div>Firma empleador(a)</div><div>Firma trabajador(a)</div></div>
+    <p class="fine">Documento referencial generado con Mi Hogar by Nanys. No constituye asesoría contable ni legal. Verifique sus obligaciones en dt.gob.cl.</p></div>`);
+}
+function printContrato(e){
+  const h=state.hogar, c=state.contratos[e.id]||{};
+  printDoc(`<div class="doc">${docBrand('Contrato de trabajo','Trabajador(a) de casa particular')}
+    <p>En ${esc(h.empComuna||'____________')}, a ${fmtFecha(c.fechaInicio)}, entre <b>${esc(h.empNombre||'____________')}</b>, RUT ${esc(h.empRut||'____________')}, domiciliado(a) en ${esc(h.empDomicilio||'____________')} ${esc(h.empComuna||'')} (en adelante, "el empleador"), y <b>${esc(e.name)}</b>, RUT ${esc(c.rut||'____________')}, domiciliado(a) en ${esc(c.domicilio||'____________')} (en adelante, "el/la trabajador(a)"), se conviene el siguiente contrato de trabajo de casa particular:</p>
+    <h2>Primero — Naturaleza de los servicios</h2><p>El/la trabajador(a) se obliga a desempeñar labores de <b>${esc(e.role||'casa particular')}</b>, en modalidad <b>${esc(e.modalidad||'')}</b>. Funciones: ${esc(c.funciones||'labores propias del aseo, orden y atención del hogar')}.</p>
+    <h2>Segundo — Lugar de trabajo</h2><p>Los servicios se prestarán en ${esc(c.lugar||h.empDomicilio||'____________')} ${esc(h.empComuna||'')}.</p>
+    <h2>Tercero — Jornada</h2><p>${esc(c.jornada||'Según la ley para trabajadores de casa particular (máximo 44 horas semanales en modalidad puertas afuera).')}${c.horario?' Horario: '+esc(c.horario)+'.':''}</p>
+    <h2>Cuarto — Remuneración</h2><p>El empleador pagará una remuneración mensual bruta de <b>${clp(e.base)}</b>, dentro de los primeros días del mes siguiente, junto con las cotizaciones legales correspondientes.</p>
+    <h2>Quinto — Duración</h2><p>El contrato rige desde el ${fmtFecha(c.fechaInicio)}. Los primeros 15 días se consideran período de prueba.</p>
+    <h2>Sexto — Previsión</h2><p>El empleador efectuará las cotizaciones de AFP, salud, seguro de cesantía, indemnización a todo evento (1,11%) y seguro de accidentes del trabajo, conforme a la ley.</p>
+    <div class="sign"><div>Firma empleador(a)</div><div>Firma trabajador(a)</div></div>
+    <p class="fine">Modelo referencial generado con Mi Hogar by Nanys. Debe registrarse en la Dirección del Trabajo dentro de 15 días (dt.gob.cl). Revíselo con un asesor antes de firmar.</p></div>`);
+}
+function printCertificado(e){
+  state.cert[e.id]=new Date().toISOString().slice(0,10); save();
+  printDoc(`<div class="doc cert">${docBrand('Certificado','Nanys · Capacitación del hogar')}
+    <div class="big">Certificado de Capacitación</div>
+    <p>Se certifica que</p>
+    <div class="name">${esc(e.name)}</div>
+    <p>ha completado satisfactoriamente el curso de<br><b>Primeros Auxilios y Curaciones Menores</b><br>impartido a través de Mi Hogar by Nanys.</p>
+    <p style="margin-top:22px">Fecha de emisión: ${new Date().toLocaleDateString('es-CL')}</p>
+    <div class="sign" style="margin-top:46px"><div>Nanys</div><div>Capacitación del hogar</div></div></div>`);
+}
+
+/* ---- SHEETS: datos del hogar y del contrato ---- */
+function sheetHogar(){
+  const h=state.hogar;
+  openSheet(`<h3>Datos del hogar (empleador)</h3>
+    <div class="field"><label>Nombre del empleador(a)</label><input id="h-nom" value="${esc(h.empNombre)}" placeholder="Ej: Juan Pérez"></div>
+    <div class="two">
+      <div class="field"><label>RUT</label><input id="h-rut" value="${esc(h.empRut)}" placeholder="12.345.678-9"></div>
+      <div class="field"><label>Comuna</label><input id="h-com" value="${esc(h.empComuna)}" placeholder="Providencia"></div>
+    </div>
+    <div class="field"><label>Domicilio</label><input id="h-dom" value="${esc(h.empDomicilio)}" placeholder="Calle 123, depto 4"></div>
+    <div class="sheet-actions"><button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-pri" id="h-save">Guardar</button></div>`);
+  document.getElementById('h-save').addEventListener('click',()=>{
+    state.hogar={empNombre:val('h-nom'),empRut:val('h-rut'),empComuna:val('h-com'),empDomicilio:val('h-dom')};
+    save(); closeSheet(); renderPersonal(); toast('Datos del hogar guardados');
+  });
+}
+function sheetContrato(e){
+  const c=state.contratos[e.id]||{};
+  openSheet(`<h3>Datos del contrato</h3>
+    <p class="subtle">Para ${esc(e.name)} · ${esc(e.role||'')}</p>
+    <div class="two">
+      <div class="field"><label>RUT trabajador(a)</label><input id="k-rut" value="${esc(c.rut||'')}" placeholder="12.345.678-9"></div>
+      <div class="field"><label>Fecha de inicio</label><input id="k-fecha" type="date" value="${c.fechaInicio||''}"></div>
+    </div>
+    <div class="field"><label>Domicilio trabajador(a)</label><input id="k-dom" value="${esc(c.domicilio||'')}" placeholder="Calle, comuna"></div>
+    <div class="field"><label>Lugar de trabajo</label><input id="k-lugar" value="${esc(c.lugar||'')}" placeholder="Domicilio del empleador"></div>
+    <div class="field"><label>Funciones pactadas</label><textarea id="k-func" rows="3" placeholder="Aseo, orden, cocina, cuidado de niños…">${esc(c.funciones||'')}</textarea></div>
+    <div class="field"><label>Jornada / horario</label><input id="k-jor" value="${esc(c.horario||'')}" placeholder="Lun a vie, 09:00 a 18:00"></div>
+    <div class="sheet-actions"><button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-pri" id="k-save">Guardar</button></div>`);
+  document.getElementById('k-save').addEventListener('click',()=>{
+    state.contratos[e.id]={rut:val('k-rut'),fechaInicio:val('k-fecha'),domicilio:val('k-dom'),lugar:val('k-lugar'),funciones:val('k-func'),horario:val('k-jor')};
+    save(); closeSheet(); renderPersonal(); toast('Contrato guardado');
+  });
+}
+
+/* ---- LEYES LABORALES ---- */
+function viewLeyes(){
+  const c=state.config;
+  return `
+    <div class="disc">Resumen <b>referencial</b> de derechos de trabajadoras/es de casa particular (Código del Trabajo de Chile). Fuente: Dirección del Trabajo y BCN. Las cifras cambian; verifica siempre en <b>dt.gob.cl</b>.</div>
+    <div class="law"><h4>Sueldo mínimo</h4><p>El ingreso mínimo es el mismo que el resto de los trabajadores: <b>${clp(c.imm)}</b> (referencial, ${esc(c.immFecha)}). En puertas adentro, <b>alojamiento y alimentación no se descuentan</b> del sueldo.</p></div>
+    <div class="law"><h4>Jornada</h4><p>Puertas afuera: máximo <b>44 horas semanales</b> (reduciéndose a 42 y luego 40 según la Ley 40 horas). Puertas adentro: derecho a descanso diario y semanal, no se computan como jornada los tiempos de descanso.</p></div>
+    <div class="law"><h4>Cotizaciones (las paga el empleador)</h4><p>AFP <b>10% + comisión</b> y Salud <b>7%</b> (se descuentan del sueldo). Además, de cargo del empleador: indemnización a todo evento <b>1,11%</b>, seguro de cesantía/AFC <b>3%</b> (2,2% cuenta individual + 0,8% fondo solidario) y seguro de accidentes <b>0,95%</b>.</p></div>
+    <div class="law"><h4>Indemnización a todo evento</h4><p>No hay indemnización por años de servicio, pero el empleador aporta mensualmente a una AFP por este concepto, por un máximo de <b>11 años</b>. La persona retira ese fondo al término del contrato, sea cual sea la causa.</p></div>
+    <div class="law"><h4>Vacaciones</h4><p><b>15 días hábiles</b> al año con remuneración íntegra tras cumplir un año. Si trabaja algunos días a la semana, las vacaciones son proporcionales.</p></div>
+    <div class="law"><h4>Período de prueba</h4><p>Los primeros <b>15 días</b> son de prueba: cualquiera de las partes puede terminar avisando con 3 días y pagando lo trabajado, sin indemnización.</p></div>
+    <div class="law"><h4>Contrato y liquidación</h4><p>El contrato debe registrarse en la DT dentro de <b>15 días</b>. El empleador debe entregar <b>comprobante o liquidación de sueldo</b> con los descuentos detallados.</p></div>
+    <div class="law"><h4>Fuero maternal y trato digno</h4><p>Gozan de fuero maternal desde el embarazo hasta un año después del postnatal. No se les puede obligar a usar uniforme en espacios públicos (parques, playas, restaurantes, etc.).</p></div>
+  `;
+}
+
+/* ---- PRIMEROS AUXILIOS ---- */
+const FIRSTAID=[
+  {id:'rcp', t:'RCP — paro cardiorrespiratorio', ic:'❤', steps:['Comprueba si responde y si respira. Si no respira, llama o pide llamar al 131 (SAMU).','Pon a la persona de espaldas sobre una superficie firme.','Ubica el centro del pecho y comprime fuerte y rápido: 30 compresiones (deja que el pecho vuelva a subir).','Si sabes hacerlo, da 2 ventilaciones; si no, continúa solo con compresiones.','Mantén el ritmo (~100-120 por minuto) hasta que llegue ayuda o la persona reaccione.']},
+  {id:'atragant', t:'Atragantamiento (Heimlich)', ic:'🫁', steps:['Si tose con fuerza, anímala a seguir tosiendo; no intervengas aún.','Si no puede toser, hablar ni respirar: ponte detrás y abraza su abdomen.','Cierra un puño sobre la boca del estómago (entre ombligo y esternón).','Haz compresiones rápidas hacia adentro y arriba, repetidas.','Si pierde el conocimiento, llama al 131 e inicia RCP.','En bebés: 5 golpes en la espalda y 5 compresiones en el pecho, alternando.']},
+  {id:'quemadura', t:'Quemaduras', ic:'🔥', steps:['Enfría la zona con agua corriente fría (no helada) por 10-20 minutos.','Quita anillos o ropa que apriete antes de que se inflame, salvo si está pegada a la piel.','Cubre con un paño limpio y húmedo o gasa estéril, sin apretar.','No revientes las ampollas ni apliques pasta de dientes, aceite o hielo.','Si es extensa, profunda, en cara, manos o genitales: busca atención médica / llama al 131.']},
+  {id:'herida', t:'Heridas y hemorragias', ic:'🩹', steps:['Lávate las manos o usa guantes si puedes.','Presiona la herida con un paño limpio para detener el sangrado.','Mantén la presión varios minutos sin levantar el paño; si se empapa, pon otro encima.','Si es posible, eleva la zona herida por sobre el nivel del corazón.','Limpia heridas leves con agua y cubre con gasa. Si el sangrado no para o es abundante, llama al 131.']},
+  {id:'desmayo', t:'Desmayo / pérdida de conocimiento', ic:'😵', steps:['Si va a desmayarse, ayúdala a sentarse o recostarse para evitar golpes.','Recuéstala boca arriba y eleva sus piernas unos 30 cm.','Afloja ropa ajustada y dale aire.','Si no recupera el conocimiento en 1 minuto o no respira normal, llama al 131 e inicia RCP si corresponde.','Al despertar, que se reincorpore lentamente.']},
+  {id:'intox', t:'Intoxicaciones', ic:'☠', steps:['Aleja a la persona de la fuente (gas, producto químico).','No provoques el vómito salvo indicación médica expresa.','Llama al CITUC (Centro de Información Toxicológica): +56 2 2635 3800, o al 131.','Ten a mano el envase o nombre del producto ingerido para informarlo.','Si está inconsciente y respira, ponla de costado (posición de recuperación).']},
+  {id:'botiquin', t:'Botiquín básico del hogar', ic:'🧰', steps:['Gasas estériles, vendas y tela adhesiva.','Antiséptico (povidona o clorhexidina) y suero fisiológico.','Tijeras, pinzas y guantes desechables.','Termómetro, analgésico/antifebril de uso habitual.','Apósitos, parches y una manta térmica.','Anota números útiles: SAMU 131, Bomberos 132, Carabineros 133, CITUC +56 2 2635 3800.']},
+  {id:'curacion', t:'Curación de herida simple', ic:'🧴', steps:['Lávate las manos y usa guantes si tienes.','Limpia la herida con agua y suero fisiológico, de adentro hacia afuera.','Aplica un antiséptico (povidona o clorhexidina) suavemente.','Cubre con gasa estéril y fíjala con tela adhesiva.','Cambia la gasa una vez al día o si se moja/ensucia.','Vigila signos de infección: enrojecimiento, calor, pus o fiebre.']},
+  {id:'raspon', t:'Raspones y erosiones', ic:'🩹', steps:['Enjuaga la zona con agua limpia para sacar tierra o arenilla.','Seca con cuidado dando toquecitos, sin frotar.','Aplica antiséptico y, si quieres, una capa fina de crema cicatrizante.','Cubre con apósito si está en zona de roce; déjalo airear si es leve.','No despegues las costras: protegen la piel mientras sana.']},
+  {id:'ampolla', t:'Ampollas y astillas', ic:'🫧', steps:['Ampolla: no la revientes; cúbrela con un apósito acolchado.','Si se rompe sola, lava, aplica antiséptico y cubre con gasa.','Astilla: limpia la zona y usa una pinza desinfectada para retirarla en el sentido en que entró.','Lava y aplica antiséptico después de sacarla.','Si está muy profunda o no sale, consulta en un centro de salud.']},
+];
+function viewAyuda(){
+  const done=state.firstaid.length, tot=FIRSTAID.length, complete=done>=tot;
+  const e=getEmp();
+  const certBlock = complete && e
+    ? `<div class="card" style="border:1.5px solid var(--miel);background:#FBF3E4">
+        <div class="ttl" style="color:var(--verde)">🎓 ¡Curso completado!</div>
+        <p class="subtle" style="margin:4px 0 10px">Puedes emitir el certificado con respaldo de Nanys para <b>${e?esc(e.name):''}</b>.</p>
+        <button class="btn btn-pri btn-sm" id="genCert" style="width:100%">Generar certificado PDF</button>
+       </div>`
+    : (e?`<p class="subtle">Completa los ${tot} módulos para emitir el certificado de <b>${esc(e.name)}</b>.</p>`:'');
+  return `
+    ${state.employees.length?empSelector():''}
+    <div class="emergency"><div class="n">131</div><div><b>SAMU — Ambulancia</b><br>Bomberos 132 · Carabineros 133 · Intoxicaciones (CITUC) +56 2 2635 3800</div></div>
+    <div class="kv" style="border-bottom:0"><span class="k">Curso completado</span><span class="v">${done}/${tot}</span></div>
+    <div class="progress"><i style="width:${tot?done/tot*100:0}%"></i></div>
+    ${certBlock}
+    ${FIRSTAID.map(f=>`
+      <div class="card" data-fa="${f.id}" style="cursor:pointer"><div class="row">
+        <div class="check ${state.firstaid.includes(f.id)?'on':''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <div class="grow"><div class="ttl">${f.ic} ${esc(f.t)}</div><div class="tags"><span class="tag">${f.steps.length} pasos</span></div></div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--tinta-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </div></div>`).join('')}
+    <div class="disc" style="margin-top:6px">Guía educativa de referencia. Ante una emergencia real, <b>llama siempre al 131</b> y sigue las indicaciones del personal de salud.</div>`;
+}
+function openFirstAid(id){
+  const f=FIRSTAID.find(x=>x.id===id); if(!f) return;
+  const read=state.firstaid.includes(id);
+  openSheet(`
+    <h3>${f.ic} ${esc(f.t)}</h3>
+    ${f.steps.map((s,i)=>`<div class="step-line"><div class="step-n">${i+1}</div><div class="step-txt">${esc(s)}</div></div>`).join('')}
+    <div class="sheet-actions" style="margin-top:16px">
+      <button class="btn btn-ghost" data-close>Cerrar</button>
+      <button class="btn btn-pri" id="faRead">${read?'✓ Leído':'Marcar como leído'}</button>
+    </div>`);
+  document.getElementById('faRead').addEventListener('click',()=>{
+    if(!state.firstaid.includes(id)) state.firstaid.push(id);
+    save(); closeSheet(); renderPersonal();
+  });
+}
+
+/* ---- SHEETS de Personal ---- */
+function sheetEmployee(emp){
+  const ed=!!emp; emp=emp||{name:'',role:'Asesora del hogar',base:state.config.imm,modalidad:'Puertas afuera'};
+  openSheet(`
+    <h3>${ed?'Editar persona':'Agregar persona'}</h3>
+    <div class="field"><label>Nombre</label><input id="e-name" value="${esc(emp.name)}" placeholder="Ej: María González"></div>
+    <div class="field"><label>Rol</label><select id="e-role">
+      ${['Asesora del hogar','Nana','Niñera','Cuidador/a de adulto mayor','Jardinero','Chofer','Matrimonio cuidador','Otro'].map(r=>`<option ${r===emp.role?'selected':''}>${r}</option>`).join('')}
+    </select></div>
+    <div class="two">
+      <div class="field"><label>Sueldo base mensual ($)</label><input id="e-base" type="number" min="0" value="${emp.base}"></div>
+      <div class="field"><label>Modalidad</label><select id="e-mod"><option ${emp.modalidad==='Puertas afuera'?'selected':''}>Puertas afuera</option><option ${emp.modalidad==='Puertas adentro'?'selected':''}>Puertas adentro</option><option ${emp.modalidad==='Por día'?'selected':''}>Por día</option></select></div>
+    </div>
+    <div class="sheet-actions">
+      ${ed?`<button class="btn btn-line" id="e-del" style="color:var(--rojo)">Eliminar</button>`:`<button class="btn btn-ghost" data-close>Cancelar</button>`}
+      <button class="btn btn-pri" id="e-save">Guardar</button>
+    </div>`);
+  document.getElementById('e-save').addEventListener('click',()=>{
+    const name=val('e-name'); if(!name) return shake('e-name');
+    const data={name,role:val('e-role'),base:+val('e-base')||0,modalidad:val('e-mod')};
+    if(ed){ Object.assign(emp,data); } else { const ne={id:uid(),...data}; state.employees.push(ne); selEmp=ne.id; }
+    save(); closeSheet(); renderPersonal(); toast('Guardado');
+  });
+  if(ed) document.getElementById('e-del').addEventListener('click',()=>{
+    if(confirm(`¿Eliminar a ${emp.name}? Se borran sus días y movimientos.`)){
+      state.employees=state.employees.filter(x=>x.id!==emp.id);
+      delete state.dias[emp.id]; delete state.liq[emp.id]; state.movs=state.movs.filter(m=>m.empId!==emp.id);
+      selEmp=state.employees[0]?.id||null; save(); closeSheet(); renderPersonal();
+    }
+  });
+}
+function sheetMov(tipo){
+  const isP=tipo==='prestamo';
+  openSheet(`
+    <h3>${isP?'Nuevo préstamo':'Nuevo anticipo'}</h3>
+    <div class="field"><label>Monto ($)</label><input id="m-monto" type="number" min="0" placeholder="50000"></div>
+    ${isP
+      ? `<div class="field"><label>Número de cuotas</label><input id="m-cuotas" type="number" min="1" value="3"></div>`
+      : `<div class="field"><label>Mes a descontar</label><select id="m-mes">${lastMonths(6).map(k=>`<option value="${k}" ${k===selMonth?'selected':''}>${mLabel(k)}</option>`).join('')}</select></div>`}
+    <div class="sheet-actions"><button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-pri" id="m-save">Guardar</button></div>`);
+  document.getElementById('m-save').addEventListener('click',()=>{
+    const monto=+val('m-monto'); if(!monto) return shake('m-monto');
+    if(isP){ const cuotas=Math.max(1,+val('m-cuotas')||1); state.movs.push({id:uid(),empId:selEmp,tipo:'prestamo',monto,cuotas,cuota:Math.round(monto/cuotas),saldo:monto,ts:Date.now()}); }
+    else { state.movs.push({id:uid(),empId:selEmp,tipo:'anticipo',monto,mes:val('m-mes'),ts:Date.now()}); }
+    save(); closeSheet(); renderPersonal(); toast('Registrado');
+  });
+}
+function sheetConfig(){
+  const c=state.config;
+  openSheet(`
+    <h3>Tasas legales (referenciales)</h3>
+    <div class="disc">Ajusta estos valores según los oficiales vigentes. Por defecto traen los datos de casa particular en Chile.</div>
+    <div class="two">
+      <div class="field"><label>Sueldo mínimo ($)</label><input id="c-imm" type="number" value="${c.imm}"></div>
+      <div class="field"><label>AFP total (%)</label><input id="c-afp" type="number" step="0.01" value="${c.afp}"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Salud (%)</label><input id="c-salud" type="number" step="0.01" value="${c.salud}"></div>
+      <div class="field"><label>Indemnización (%)</label><input id="c-indem" type="number" step="0.01" value="${c.indem}"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Cesantía / AFC (%)</label><input id="c-ces" type="number" step="0.01" value="${c.cesantia}"></div>
+      <div class="field"><label>Mutual (%)</label><input id="c-mut" type="number" step="0.01" value="${c.mutual}"></div>
+    </div>
+    <div class="field" style="max-width:160px"><label>SIS (%)</label><input id="c-sis" type="number" step="0.01" value="${c.sis}"></div>
+    <div class="sheet-actions"><button class="btn btn-ghost" data-close>Cancelar</button><button class="btn btn-pri" id="c-save">Guardar</button></div>`);
+  document.getElementById('c-save').addEventListener('click',()=>{
+    state.config={...c, imm:+val('c-imm')||c.imm, afp:+val('c-afp')||0, salud:+val('c-salud')||0, indem:+val('c-indem')||0, cesantia:+val('c-ces')||0, mutual:+val('c-mut')||0, sis:+val('c-sis')||0};
+    save(); closeSheet(); renderPersonal(); toast('Tasas actualizadas');
+  });
+}
+
+/* ---- wiring de Personal (se re-aplica en cada render) ---- */
+function wirePersonal(){
+  const sel=document.getElementById('empSel'); if(sel) sel.addEventListener('change',e=>{ selEmp=e.target.value; renderPersonal(); });
+  document.querySelectorAll('#empNew').forEach(b=>b.addEventListener('click',()=>sheetEmployee()));
+  const em=document.getElementById('empEdit'); if(em) em.addEventListener('click',()=>sheetEmployee(getEmp()));
+  const pm=document.getElementById('persMonth'); if(pm) pm.addEventListener('change',e=>{ selMonth=e.target.value; renderPersonal(); });
+  if(persView==='sueldo'){
+    ['liqDias','liqLoco','liqColacion','liqOtros'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',showLiq); });
+    const cb=document.getElementById('cfgBtn'); if(cb) cb.addEventListener('click',sheetConfig);
+    showLiq();
+  }
+  if(persView==='dias'){
+    document.querySelectorAll('[data-day]').forEach(b=>b.addEventListener('click',()=>{
+      const d=+b.dataset.day; state.dias[selEmp]=state.dias[selEmp]||{}; const arr=state.dias[selEmp][selMonth]=state.dias[selEmp][selMonth]||[];
+      const i=arr.indexOf(d); i>=0?arr.splice(i,1):arr.push(d); save();
+      b.classList.toggle('on'); document.getElementById('diasCount').textContent=arr.length;
+    }));
+    const e=getEmp(); const [y,m]=selMonth.split('-').map(Number); const dim=new Date(y,m,0).getDate();
+    const lv=()=>{ state.dias[selEmp]=state.dias[selEmp]||{}; return state.dias[selEmp]; };
+    const clr=document.getElementById('diasClear'); if(clr) clr.addEventListener('click',()=>{ lv()[selMonth]=[]; save(); renderPersonal(); });
+    const all=document.getElementById('diasAll'); if(all) all.addEventListener('click',()=>{ lv()[selMonth]=Array.from({length:dim},(_,i)=>i+1); save(); renderPersonal(); });
+    const lvb=document.getElementById('diasLV'); if(lvb) lvb.addEventListener('click',()=>{ const a=[]; for(let d=1;d<=dim;d++){ const w=new Date(y,m-1,d).getDay(); if(w>=1&&w<=5)a.push(d);} lv()[selMonth]=a; save(); renderPersonal(); });
+  }
+  if(persView==='adelantos'){
+    const a=document.getElementById('newAnt'); if(a) a.addEventListener('click',()=>sheetMov('anticipo'));
+    const p=document.getElementById('newPres'); if(p) p.addEventListener('click',()=>sheetMov('prestamo'));
+    document.querySelectorAll('[data-mov-del]').forEach(b=>b.addEventListener('click',()=>{ state.movs=state.movs.filter(m=>m.id!==b.dataset.movDel); save(); renderPersonal(); }));
+    document.querySelectorAll('[data-mov-pay]').forEach(b=>b.addEventListener('click',()=>{ const m=state.movs.find(x=>x.id===b.dataset.movPay); m.saldo=Math.max(0,m.saldo-m.cuota); save(); renderPersonal(); toast('Cuota registrada'); }));
+  }
+  if(persView==='ayuda'){
+    document.querySelectorAll('[data-fa]').forEach(b=>b.addEventListener('click',()=>openFirstAid(b.dataset.fa)));
+    const gc=document.getElementById('genCert'); if(gc) gc.addEventListener('click',()=>{ printCertificado(getEmp()); toast('Certificado generado'); });
+  }
+  if(persView==='pagos'){
+    document.querySelectorAll('[data-pago-del]').forEach(b=>b.addEventListener('click',()=>{ if(confirm('¿Eliminar este pago del historial?')){ state.pagos=state.pagos.filter(p=>p.id!==b.dataset.pagoDel); save(); renderPersonal(); } }));
+  }
+  if(persView==='contrato'){
+    const eh=document.getElementById('editHogar'); if(eh) eh.addEventListener('click',sheetHogar);
+    const ec=document.getElementById('editContrato'); if(ec) ec.addEventListener('click',()=>sheetContrato(getEmp()));
+    const gc=document.getElementById('genContrato'); if(gc) gc.addEventListener('click',()=>{
+      if(!state.hogar.empNombre){ toast('Completa primero los datos del hogar'); return sheetHogar(); }
+      printContrato(getEmp());
+    });
+  }
+  if(persView==='cumpl'){
+    document.querySelectorAll('[data-cumpl]').forEach(b=>b.addEventListener('click',()=>{
+      const k=b.dataset.cumpl; state.cumpl[selEmp]=state.cumpl[selEmp]||{}; state.cumpl[selEmp][k]=!state.cumpl[selEmp][k]; save(); renderPersonal();
+    }));
+  }
+}
+
+
+function renderAll(){ renderAct(); renderDesp(); renderRec(); renderCook(); renderPersonal(); }
+function go(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===id));
+  document.querySelector('main').scrollTop=0;
+}
+
+/* ============ EVENTOS ============ */
+document.getElementById('tabs').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) go(b.dataset.tab); });
+document.getElementById('menuBtn').addEventListener('click',sheetMenu);
+document.getElementById('persSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+  persView=b.dataset.pv; document.querySelectorAll('#persSeg button').forEach(x=>x.classList.toggle('on',x===b)); renderPersonal(); });
+
+// actividades
+document.getElementById('actAdd').addEventListener('click',addAct);
+document.getElementById('actInput').addEventListener('keydown',e=>{ if(e.key==='Enter') addAct(); });
+function addAct(){ const i=document.getElementById('actInput'); const t=i.value.trim(); if(!t) return;
+  state.activities.unshift({id:uid(),text:t,who:'',done:false}); i.value=''; save(); renderAct(); }
+document.getElementById('actFilters').addEventListener('click',e=>{ const b=e.target.closest('.fchip'); if(!b)return;
+  actFilter=b.dataset.f; document.querySelectorAll('#actFilters .fchip').forEach(x=>x.classList.toggle('on',x===b)); renderAct(); });
+document.getElementById('actList').addEventListener('click',e=>{
+  const c=e.target.closest('[data-act-check]'); const d=e.target.closest('[data-act-del]');
+  if(c){ const a=state.activities.find(x=>x.id===c.dataset.actCheck); a.done=!a.done; save(); renderAct(); }
+  if(d){ state.activities=state.activities.filter(x=>x.id!==d.dataset.actDel); save(); renderAct(); }
+});
+
+// despensa
+document.getElementById('despAdd').addEventListener('click',sheetNewPantry);
+document.getElementById('despSearch').addEventListener('input',e=>{ despQ=e.target.value; renderDesp(); });
+document.getElementById('despList').addEventListener('click',e=>{
+  const plus=e.target.closest('[data-desp-plus]'), minus=e.target.closest('[data-desp-minus]'), del=e.target.closest('[data-desp-del]');
+  if(plus){ const p=state.pantry.find(x=>x.id===plus.dataset.despPlus); p.qty=Math.round((p.qty+(p.qty>=1?1:0.5))*10)/10||1; if(p.qty<1)p.qty=1; save(); renderDesp(); renderCook(); }
+  if(minus){ const p=state.pantry.find(x=>x.id===minus.dataset.despMinus); p.qty=Math.max(0,Math.round((p.qty-(p.qty>1?1:0.5))*10)/10); save(); renderDesp(); renderCook(); }
+  if(del){ const p=state.pantry.find(x=>x.id===del.dataset.despDel); if(confirm(`¿Eliminar "${p.name}"?`)){ state.pantry=state.pantry.filter(x=>x.id!==del.dataset.despDel); save(); renderDesp(); renderCook(); } }
+});
+
+// recetas
+document.getElementById('recAdd').addEventListener('click',sheetNewRecipe);
+document.getElementById('recList').addEventListener('click',e=>{ const c=e.target.closest('[data-open-rec]'); if(c) openRecipe(c.dataset.openRec); });
+document.getElementById('cookList').addEventListener('click',e=>{ const c=e.target.closest('[data-open-rec]'); if(c) openRecipe(c.dataset.openRec); });
+
+// fecha
+const dias=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const meses=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const d=new Date();
+document.getElementById('dateLbl').textContent = `${dias[d.getDay()]} ${d.getDate()} ${meses[d.getMonth()]}`.replace(/^\w/,c=>c.toUpperCase());
+
+renderAll();
+</script>
+</body>
+</html>

@@ -99,18 +99,21 @@ function loginView(msg){
     <div class="login">
       <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 21v-6h6v6"/></svg></div>
       <h2>Hub Nanys</h2><p>Acceso solo para el equipo de Nanys</p>
-      <div class="field"><label>Email</label><input id="li-email" type="email" placeholder="tu@correo.cl" autocomplete="username"></div>
+      <div class="field"><label>Usuario</label><input id="li-email" type="text" value="admin" autocomplete="username"></div>
       <div class="field"><label>Contraseña</label><input id="li-pass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
       <button class="btn btn-pri" id="li-btn">Entrar</button>
       ${msg?`<div class="err">${esc(msg)}</div>`:''}
-      <div class="muted">¿Primera vez? Crea el usuario admin en Supabase → Authentication → Add user, y entra con ese correo.</div>
+      <div class="muted">Acceso privado del equipo Nanys. Los datos de clientes y trabajadoras están protegidos.</div>
     </div></main></div>`;
   $('li-btn').addEventListener('click',doLogin);
   $('li-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 }
 async function doLogin(){
-  const email=$('li-email').value.trim(), password=$('li-pass').value;
-  if(!email||!password){ return loginView('Escribe tu email y contraseña.'); }
+  let user=$('li-email').value.trim(), password=$('li-pass').value;
+  if(!user||!password){ return loginView('Escribe tu usuario y contraseña.'); }
+  // mapeo usuario → email interno (login simple para el equipo)
+  const map={admin:'admin@nanys.cl'};
+  const email = user.includes('@') ? user : (map[user.toLowerCase()]||user);
   $('li-btn').textContent='Entrando…'; $('li-btn').disabled=true;
   try{
     const r=await fetch(`${URL_SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password})});

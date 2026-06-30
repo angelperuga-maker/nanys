@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hub Nanys — Fichas, solicitudes y match</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzFGNDAzNSIvPjxwYXRoIGQ9Ik03IDE1bDktNyA5IDciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0U4QTEzQSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik05IDE0djloMTR2LTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZBRjZFRiIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMyAyM3YtNWg2djUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZBRjZFRiIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPgo=">
+<meta name="theme-color" content="#1F4035">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--verde:#1F4035;--verde-2:#2E5A4A;--verde-3:#16302a;--lino:#FAF6EF;--salvia:#E7EEE6;--salvia-2:#D7E3D6;
+    --miel:#E8A13A;--miel-dark:#C9831F;--tinta:#23211C;--tinta-soft:#6A675E;--linea:#E3DCCF;--blanco:#fff;--rojo:#C7553B;--ok:#3C7A52;--radio:16px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Mulish',system-ui,sans-serif;background:var(--salvia);color:var(--tinta);-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.12}
+  .app{max-width:680px;margin:0 auto;min-height:100vh;background:var(--lino);box-shadow:0 0 60px -20px rgba(0,0,0,.15);display:flex;flex-direction:column}
+  .top{background:var(--verde);color:var(--lino);padding:14px 18px;position:sticky;top:0;z-index:20}
+  .top .r{display:flex;align-items:center;gap:11px}
+  .seal{width:34px;height:34px;border-radius:9px;background:rgba(232,161,58,.18);display:grid;place-items:center;color:var(--miel);flex:0 0 auto}
+  .seal svg{width:19px;height:19px}
+  .top h1{font-size:1.12rem;color:var(--lino)}.top .sub{font-size:.74rem;color:#BFD0C2}
+  .top .out{margin-left:auto;background:rgba(255,255,255,.12);border:0;color:var(--lino);border-radius:9px;padding:8px 12px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit}
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 12px 0;background:var(--verde);scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:0 0 auto;font-family:inherit;font-size:.82rem;font-weight:700;padding:9px 14px;border-radius:99px 99px 0 0;border:0;background:rgba(255,255,255,.08);color:#BFD0C2;cursor:pointer;white-space:nowrap}
+  .tabs button.on{background:var(--lino);color:var(--verde)}
+  main{flex:1;padding:16px}
+  .panel{display:none}.panel.on{display:block}
+  /* login */
+  .login{max-width:380px;margin:8vh auto;padding:26px 22px;background:var(--blanco);border:1px solid var(--linea);border-radius:20px;text-align:center}
+  .login .seal{width:52px;height:52px;border-radius:14px;margin:0 auto 14px;background:var(--verde);color:var(--miel)}
+  .login .seal svg{width:28px;height:28px}
+  .login h2{font-size:1.4rem;color:var(--verde);margin-bottom:4px}
+  .login p{font-size:.85rem;color:var(--tinta-soft);margin-bottom:18px}
+  .field{margin-bottom:12px;text-align:left}
+  .field label{display:block;font-size:.8rem;font-weight:700;color:var(--verde);margin-bottom:5px}
+  input,select{font-family:inherit;font-size:.95rem;padding:12px 13px;border:1.5px solid var(--linea);border-radius:12px;background:var(--lino);color:var(--tinta);width:100%}
+  input:focus,select:focus{outline:none;border-color:var(--verde-2);background:#fff}
+  .btn{font-family:inherit;font-weight:700;border:0;border-radius:13px;cursor:pointer;padding:13px;font-size:.96rem;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;transition:.15s}
+  .btn-pri{background:var(--miel);color:var(--verde-3)}.btn-pri:active{background:var(--miel-dark)}
+  .btn-line{background:transparent;color:var(--verde);box-shadow:inset 0 0 0 1.5px var(--verde)}
+  .err{color:var(--rojo);font-size:.84rem;margin-top:10px;font-weight:600}
+  .muted{color:var(--tinta-soft);font-size:.78rem;margin-top:14px}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+  .stat{background:var(--blanco);border:1px solid var(--linea);border-radius:14px;padding:14px}
+  .stat b{font-family:'Fraunces',serif;font-size:1.7rem;color:var(--verde);display:block;line-height:1}
+  .stat span{font-size:.76rem;color:var(--tinta-soft)}
+  .lbl{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--miel-dark);margin:16px 0 8px}
+  /* cards */
+  .card{background:var(--blanco);border:1px solid var(--linea);border-radius:var(--radio);padding:14px;margin-bottom:10px;cursor:pointer;transition:.14s}
+  .card:active{transform:scale(.995)}
+  .card .row{display:flex;align-items:center;gap:12px}
+  .av{width:42px;height:42px;border-radius:11px;flex:0 0 auto;display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;color:#fff}
+  .av.h{background:var(--verde)}.av.t{background:var(--miel);color:var(--verde-3)}.av.s{background:var(--verde-2)}
+  .grow{flex:1;min-width:0}
+  .nm{font-weight:700;font-size:1rem}
+  .meta{font-size:.82rem;color:var(--tinta-soft)}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+  .tag{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--salvia);color:var(--verde-2)}
+  .empty{text-align:center;color:var(--tinta-soft);padding:36px 18px;font-size:.92rem}
+  .when{font-size:.72rem;color:var(--tinta-soft);white-space:nowrap}
+  /* match */
+  .mscore{flex:0 0 auto;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:600;font-size:1rem;color:#fff}
+  .reasons{margin-top:8px;display:flex;flex-direction:column;gap:3px}
+  .reasons .ok{font-size:.8rem;color:var(--ok)}.reasons .bad{font-size:.8rem;color:var(--rojo)}
+  .barmini{height:6px;background:var(--salvia-2);border-radius:99px;overflow:hidden;margin-top:8px}.barmini>i{display:block;height:100%}
+  /* sheet */
+  .scrim{position:fixed;inset:0;background:rgba(20,30,25,.5);z-index:40;display:none;align-items:flex-end;justify-content:center}
+  .scrim.open{display:flex}
+  .sheet{background:var(--lino);width:100%;max-width:680px;border-radius:22px 22px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto}
+  .sheet h3{font-size:1.3rem;color:var(--verde);margin-bottom:3px}
+  .sheet .sub{color:var(--tinta-soft);font-size:.86rem;margin-bottom:14px}
+  .kv{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--linea);font-size:.9rem}
+  .kv:last-child{border-bottom:0}.kv .k{color:var(--tinta-soft);flex:0 0 46%}.kv .v{font-weight:600;text-align:right}
+  .sheet .wa{margin-top:14px}
+  .wa-link{display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;font-weight:700;padding:13px;border-radius:13px;text-decoration:none}
+  .wa-link svg{width:18px;height:18px;fill:#fff}
+  .loading{text-align:center;padding:40px;color:var(--tinta-soft)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="scrim" id="scrim"><div class="sheet" id="sheet"></div></div>
+
+<script>
+const URL_SB="https://bqlgfmqcefledqyodkii.supabase.co";
+const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbGdmbXFjZWZsZWRxeW9ka2lpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1OTAxMjUsImV4cCI6MjA5NTE2NjEyNX0.m_XyXsZ84niHcHrKNgHSDSS8DxpR7vnHhMfQJk7yM_s";
+const WHATSAPP="56961218105";
+const $=id=>document.getElementById(id);
+const esc=s=>(s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>(s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+let token=null, hogares=[], trabaj=[], leads=[], tab='resumen', matchHogar=null;
+
+/* ===== LOGIN ===== */
+function loginView(msg){
+  $('root').innerHTML=`<div class="app"><main>
+    <div class="login">
+      <div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 21v-6h6v6"/></svg></div>
+      <h2>Hub Nanys</h2><p>Acceso solo para el equipo de Nanys</p>
+      <div class="field"><label>Email</label><input id="li-email" type="email" placeholder="tu@correo.cl" autocomplete="username"></div>
+      <div class="field"><label>Contraseña</label><input id="li-pass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+      <button class="btn btn-pri" id="li-btn">Entrar</button>
+      ${msg?`<div class="err">${esc(msg)}</div>`:''}
+      <div class="muted">¿Primera vez? Crea el usuario admin en Supabase → Authentication → Add user, y entra con ese correo.</div>
+    </div></main></div>`;
+  $('li-btn').addEventListener('click',doLogin);
+  $('li-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+}
+async function doLogin(){
+  const email=$('li-email').value.trim(), password=$('li-pass').value;
+  if(!email||!password){ return loginView('Escribe tu email y contraseña.'); }
+  $('li-btn').textContent='Entrando…'; $('li-btn').disabled=true;
+  try{
+    const r=await fetch(`${URL_SB}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const d=await r.json();
+    if(!d.access_token){ return loginView(d.error_description||d.msg||'Email o contraseña incorrectos.'); }
+    token=d.access_token; await loadData(); appView();
+  }catch(e){ loginView('No se pudo conectar. Revisa tu internet.'); }
+}
+function logout(){ token=null; hogares=[];trabaj=[];leads=[]; loginView(); }
+
+/* ===== DATA ===== */
+async function api(path){
+  const r=await fetch(`${URL_SB}/rest/v1/${path}`,{headers:{apikey:KEY,Authorization:'Bearer '+token}});
+  if(r.status===401){ throw new Error('401'); }
+  return r.json();
+}
+async function loadData(){
+  try{
+    const fichas=await api('fichas?select=*&order=created_at.desc');
+    hogares=fichas.filter(f=>f.tipo==='hogar'); trabaj=fichas.filter(f=>f.tipo==='trabajadora');
+    leads=await api('leads_nanys?select=*&order=created_at.desc');
+  }catch(e){ if(e.message==='401'){ logout(); } }
+}
+const raw=(f,id)=>{ const d=f.datos&&f.datos[id]; return d?(d.raw!==undefined?d.raw:d.valor):undefined; };
+const val=(f,id)=>{ const d=f.datos&&f.datos[id]; return d?d.valor:'—'; };
+const fecha=s=>new Date(s).toLocaleDateString('es-CL',{day:'2-digit',month:'short'});
+const initials=n=>(n||'?').split(' ').slice(0,2).map(x=>x[0]||'').join('').toUpperCase();
+
+/* ===== APP SHELL ===== */
+function appView(){
+  $('root').innerHTML=`<div class="app">
+    <header class="top"><div class="r">
+      <span class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 21v-6h6v6"/></svg></span>
+      <div><h1>Hub Nanys</h1><div class="sub">Fichas, solicitudes y match</div></div>
+      <button class="out" id="outBtn">Salir</button></div>
+      <div class="tabs" id="tabs">
+        <button data-t="resumen">Resumen</button>
+        <button data-t="hogares">Hogares (${hogares.length})</button>
+        <button data-t="postulantes">Postulantes (${trabaj.length})</button>
+        <button data-t="solicitudes">Solicitudes (${leads.length})</button>
+        <button data-t="match">Match ✨</button>
+      </div>
+    </header>
+    <main id="main"></main></div>`;
+  $('outBtn').addEventListener('click',logout);
+  $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){tab=b.dataset.t;render();}});
+  render();
+}
+function render(){
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+  const m=$('main');
+  if(tab==='resumen') m.innerHTML=viewResumen();
+  if(tab==='hogares') m.innerHTML=listFichas(hogares,'h');
+  if(tab==='postulantes') m.innerHTML=listFichas(trabaj,'t');
+  if(tab==='solicitudes') m.innerHTML=viewLeads();
+  if(tab==='match') m.innerHTML=viewMatch();
+  wire();
+}
+
+/* ===== VIEWS ===== */
+function viewResumen(){
+  const recientes=[...hogares.map(x=>({...x,_t:'Hogar'})),...trabaj.map(x=>({...x,_t:'Postulante'})),...leads.map(x=>({...x,_t:'Solicitud'}))]
+    .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,6);
+  return `<div class="stats">
+      <div class="stat"><b>${hogares.length}</b><span>Hogares</span></div>
+      <div class="stat"><b>${trabaj.length}</b><span>Postulantes</span></div>
+      <div class="stat"><b>${leads.length}</b><span>Solicitudes</span></div>
+    </div>
+    <div class="lbl">Actividad reciente</div>
+    ${recientes.length?recientes.map(r=>`<div class="card"><div class="row">
+      <div class="av ${r._t==='Hogar'?'h':r._t==='Postulante'?'t':'s'}">${esc(initials(r.nombre))}</div>
+      <div class="grow"><div class="nm">${esc(r.nombre||'—')}</div><div class="meta">${r._t} · ${esc(r.comuna||'')}</div></div>
+      <div class="when">${fecha(r.created_at)}</div></div></div>`).join(''):'<div class="empty">Aún no hay registros.</div>'}`;
+}
+function listFichas(arr,kind){
+  if(!arr.length) return `<div class="empty">Sin ${kind==='h'?'hogares':'postulantes'} todavía.<br>Comparte el link de la ficha para empezar a recibir.</div>`;
+  return arr.map(f=>{
+    const tagsRaw = kind==='h' ? (raw(f,'tipo_personal')||[]) : (raw(f,'roles')||[]);
+    const tags = Array.isArray(tagsRaw)?tagsRaw.slice(0,3):[];
+    return `<div class="card" data-open="${kind}|${f.id}"><div class="row">
+      <div class="av ${kind==='h'?'h':'t'}">${esc(initials(f.nombre))}</div>
+      <div class="grow"><div class="nm">${esc(f.nombre||'—')}</div>
+        <div class="meta">${esc(f.comuna||'Sin comuna')} · ${fecha(f.created_at)}</div>
+        ${tags.length?`<div class="tags">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+      </div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--tinta-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </div></div>`;
+  }).join('');
+}
+function viewLeads(){
+  if(!leads.length) return '<div class="empty">Sin solicitudes de la landing todavía.</div>';
+  return leads.map(l=>`<div class="card" data-lead="${l.id}"><div class="row">
+    <div class="av s">${esc(initials(l.nombre))}</div>
+    <div class="grow"><div class="nm">${esc(l.nombre||'—')}</div>
+      <div class="meta">${esc(l.servicio||'—')} · ${esc(l.comuna||'')} · ${fecha(l.created_at)}</div>
+      ${l.detalle?`<div class="tags"><span class="tag">${esc((l.detalle||'').slice(0,60))}</span></div>`:''}
+    </div></div></div>`).join('');
+}
+function viewMatch(){
+  if(!hogares.length||!trabaj.length) return '<div class="empty">Necesitas al menos un hogar y un postulante para hacer match.</div>';
+  if(!matchHogar) matchHogar=hogares[0].id;
+  const h=hogares.find(x=>x.id===matchHogar);
+  const ranked=trabaj.map(t=>({t,...matchScore(h,t)})).sort((a,b)=>b.pct-a.pct);
+  return `<div class="lbl">Elige el hogar</div>
+    <select id="matchSel" style="margin-bottom:14px">${hogares.map(x=>`<option value="${x.id}" ${x.id===matchHogar?'selected':''}>${esc(x.nombre||'—')} · ${esc(x.comuna||'')}</option>`).join('')}</select>
+    <div class="lbl">Mejores coincidencias para ${esc(h.nombre||'este hogar')}</div>
+    ${ranked.map(r=>{
+      const col=r.pct>=75?'var(--ok)':r.pct>=50?'var(--miel-dark)':'var(--rojo)';
+      return `<div class="card" data-open="t|${r.t.id}"><div class="row">
+        <div class="mscore" style="background:${col}">${r.pct}%</div>
+        <div class="grow"><div class="nm">${esc(r.t.nombre||'—')}</div><div class="meta">${esc(r.t.comuna||'')}</div>
+          <div class="barmini"><i style="width:${r.pct}%;background:${col}"></i></div>
+          <div class="reasons">${r.reasons.map(x=>`<span class="ok">✓ ${esc(x)}</span>`).join('')}${r.flags.map(x=>`<span class="bad">⚠ ${esc(x)}</span>`).join('')}</div>
+        </div></div></div>`;
+    }).join('')}`;
+}
+
+/* ===== MATCH ENGINE ===== */
+function arr(v){ return Array.isArray(v)?v:(v?[v]:[]); }
+function overlap(a,b){ const B=arr(b).map(norm); return arr(a).filter(x=>B.some(y=>y.includes(norm(x))||norm(x).includes(y))); }
+function likePts(idx,w){ const m={0:1,1:.8,2:.5,3:0}; return idx==null?w*.5:w*(m[idx]??.5); }
+function matchScore(h,t){
+  let earned=0,max=0,reasons=[],flags=[];
+  // Rol (30)
+  max+=30; const roles=overlap(raw(h,'tipo_personal'), [...arr(raw(t,'roles')),...arr(raw(t,'habilidades'))]);
+  if(roles.length){ earned+=30; reasons.push('Hace de '+roles.join(', ')); } else flags.push('El rol buscado no calza con su experiencia');
+  // Modalidad (15)
+  const hm=raw(h,'modalidad'), tm=raw(t,'modalidad'); max+=15;
+  if(hm&&tm){ if(norm(hm)===norm(tm)){ earned+=15; reasons.push('Misma modalidad ('+hm+')'); } else flags.push('Hogar quiere '+hm+', ella prefiere '+tm); }
+  else earned+=7.5;
+  // Tareas (12)
+  const ht=arr(raw(h,'tareas')); if(ht.length){ max+=12; const ov=overlap(ht,[...arr(raw(t,'habilidades')),...arr(raw(t,'roles'))]); earned+=12*ov.length/ht.length; if(ov.length) reasons.push('Cubre '+ov.length+' de '+ht.length+' tareas'); }
+  // Niños (12)
+  if((+raw(h,'ninos')||0)>0){ max+=12; const i=raw(t,'like_ninos'); earned+=likePts(i,12); if(i<=1) reasons.push('Le gustan los niños'); if(i===3) flags.push('Hay niños, pero ella prefiere no'); }
+  // Perros (10)
+  if((+raw(h,'perros')||0)>0){ max+=10; const i=raw(t,'like_perros'); earned+=likePts(i,10); if(i<=1) reasons.push('Le gustan los perros'); if(i===3) flags.push('Hay perros, pero ella prefiere no'); }
+  // Gatos (6)
+  if((+raw(h,'gatos')||0)>0){ max+=6; const i=raw(t,'like_gatos'); earned+=likePts(i,6); if(i===3) flags.push('Hay gatos, pero ella prefiere no'); }
+  // Adulto mayor (10)
+  if((+raw(h,'adultos_mayores')||0)>0){ max+=10; const i=raw(t,'comodidad_am'); earned+=likePts(i,10); if(i<=1) reasons.push('Cómoda con adultos mayores'); if(i===3) flags.push('Hay adulto mayor, pero no se siente cómoda'); }
+  // Zona (10)
+  max+=10; const z=arr(raw(t,'zonas'));
+  if(z.some(x=>norm(x).includes('toda'))){ earned+=10; reasons.push('Trabaja en toda la RM'); }
+  else if(z.length){ earned+=5; reasons.push('Zonas: '+z.join(', ')); }
+  const pct=max?Math.round(earned/max*100):0;
+  return {pct,reasons:reasons.slice(0,4),flags};
+}
+
+/* ===== DETAIL SHEETS ===== */
+const scrim=$('scrim'), sheet=$('sheet');
+function openSheet(html){ sheet.innerHTML=html; scrim.classList.add('open'); sheet.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeSheet)); }
+function closeSheet(){ scrim.classList.remove('open'); }
+scrim.addEventListener('click',e=>{if(e.target===scrim)closeSheet();});
+function openFicha(kind,id){
+  const f=(kind==='h'?hogares:trabaj).find(x=>x.id===id); if(!f) return;
+  const rows=Object.values(f.datos||{}).map(d=>`<div class="kv"><span class="k">${esc(d.label)}</span><span class="v">${esc(d.valor||'—')}</span></div>`).join('');
+  const wa=`https://wa.me/${(f.telefono||'').replace(/[^0-9]/g,'')||WHATSAPP}`;
+  openSheet(`<h3>${esc(f.nombre||'—')}</h3><div class="sub">${kind==='h'?'Hogar':'Postulante'} · ${esc(f.comuna||'')} · ${fecha(f.created_at)}</div>
+    ${rows}
+    <div class="wa">${f.telefono?`<a class="wa-link" target="_blank" href="${wa}"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2z"/></svg> Escribir por WhatsApp</a>`:''}</div>
+    <button class="btn btn-line" data-close style="margin-top:10px">Cerrar</button>`);
+}
+function openLead(id){
+  const l=leads.find(x=>x.id===id); if(!l) return;
+  const wa=`https://wa.me/${(l.telefono||'').replace(/[^0-9]/g,'')||WHATSAPP}`;
+  openSheet(`<h3>${esc(l.nombre||'—')}</h3><div class="sub">Solicitud · ${fecha(l.created_at)}</div>
+    <div class="kv"><span class="k">Servicio</span><span class="v">${esc(l.servicio||'—')}</span></div>
+    <div class="kv"><span class="k">Comuna</span><span class="v">${esc(l.comuna||'—')}</span></div>
+    <div class="kv"><span class="k">Teléfono</span><span class="v">${esc(l.telefono||'—')}</span></div>
+    <div class="kv"><span class="k">Detalle</span><span class="v">${esc(l.detalle||'—')}</span></div>
+    <div class="wa">${l.telefono?`<a class="wa-link" target="_blank" href="${wa}"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2z"/></svg> Escribir por WhatsApp</a>`:''}</div>
+    <button class="btn btn-line" data-close style="margin-top:10px">Cerrar</button>`);
+}
+function wire(){
+  document.querySelectorAll('[data-open]').forEach(c=>c.addEventListener('click',()=>{const[k,id]=c.dataset.open.split('|');openFicha(k,id);}));
+  document.querySelectorAll('[data-lead]').forEach(c=>c.addEventListener('click',()=>openLead(c.dataset.lead)));
+  const ms=$('matchSel'); if(ms) ms.addEventListener('change',e=>{matchHogar=e.target.value;render();});
+}
+
+loginView();
+</script>
+</body>
+</html>

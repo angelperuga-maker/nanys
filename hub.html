@@ -297,14 +297,41 @@ const scrim=$('scrim'), sheet=$('sheet');
 function openSheet(html){ sheet.innerHTML=html; scrim.classList.add('open'); sheet.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeSheet)); }
 function closeSheet(){ scrim.classList.remove('open'); }
 scrim.addEventListener('click',e=>{if(e.target===scrim)closeSheet();});
+const HIDE_SHARE=['telefono','email','rut','direccion','emergencia_nombre','emergencia_tel'];
+function redactedSummary(f){
+  const titulo=f.tipo==='hogar'?'Ficha de Hogar':'Ficha de Postulante';
+  const primerNombre=(f.nombre||'').trim().split(/\s+/)[0]||'';
+  const header=`*${titulo}*${primerNombre?(' — '+primerNombre):''}`;
+  const lines=[];
+  for(const [fid,d] of Object.entries(f.datos||{})){
+    if(HIDE_SHARE.includes(fid)||fid==='nombre'||fid==='comuna') continue;
+    if(fid==='referencias'){
+      const refs=Array.isArray(d.raw)?d.raw:[];
+      const r=refs.filter(x=>x&&(x.comuna||x.tiempo)).map(x=>`en ${x.comuna||'—'}${x.tiempo?' ('+x.tiempo+')':''}`);
+      if(r.length) lines.push('• Referencias comprobables: '+r.join('; '));
+      continue;
+    }
+    if(d.valor && d.valor!=='—') lines.push('• '+d.label+': '+d.valor);
+  }
+  return `${header}\n\n${lines.join('\n')}\n\n_Compartido por Nanys · datos de contacto reservados. Te coordinamos nosotros._`;
+}
 function openFicha(kind,id){
   const f=(kind==='h'?hogares:trabaj).find(x=>x.id===id); if(!f) return;
-  const rows=Object.values(f.datos||{}).map(d=>`<div class="kv"><span class="k">${esc(d.label)}</span><span class="v">${esc(d.valor||'—')}</span></div>`).join('');
+  const rows=Object.entries(f.datos||{}).map(([fid,d])=>`<div class="kv"><span class="k">${esc(d.label)}${HIDE_SHARE.includes(fid)?' 🔒':''}</span><span class="v">${esc(d.valor||'—')}</span></div>`).join('');
   const wa=`https://wa.me/${(f.telefono||'').replace(/[^0-9]/g,'')||WHATSAPP}`;
   openSheet(`<h3>${esc(f.nombre||'—')}</h3><div class="sub">${kind==='h'?'Hogar':'Postulante'} · ${esc(f.comuna||'')} · ${fecha(f.created_at)}</div>
     ${rows}
+    <p class="muted" style="margin:10px 0 0">🔒 = no se incluye al compartir sin contacto</p>
     <div class="wa">${f.telefono?`<a class="wa-link" target="_blank" href="${wa}"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2z"/></svg> Escribir por WhatsApp</a>`:''}</div>
-    <button class="btn btn-line" data-close style="margin-top:10px">Cerrar</button>`);
+    <button class="btn btn-pri" id="shareNC" style="margin-top:10px">📤 Compartir sin datos de contacto</button>
+    <button class="btn btn-line" id="copyNC" style="margin-top:8px">📋 Copiar resumen (sin contacto)</button>
+    <button class="btn btn-line" data-close style="margin-top:8px">Cerrar</button>`);
+  const summary=redactedSummary(f);
+  $('shareNC').addEventListener('click',()=>window.open('https://wa.me/?text='+encodeURIComponent(summary),'_blank'));
+  $('copyNC').addEventListener('click',async()=>{
+    try{ await navigator.clipboard.writeText(summary); }catch(e){ const ta=document.createElement('textarea'); ta.value=summary; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+    const b=$('copyNC'); b.textContent='¡Copiado!'; setTimeout(()=>b.textContent='📋 Copiar resumen (sin contacto)',1400);
+  });
 }
 function openLead(id){
   const l=leads.find(x=>x.id===id); if(!l) return;

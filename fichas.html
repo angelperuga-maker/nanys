@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Fichas Nanys — Hogar y Trabajadora</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzFGNDAzNSIvPjxwYXRoIGQ9Ik03IDE1bDktNyA5IDciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0U4QTEzQSIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik05IDE0djloMTR2LTkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZBRjZFRiIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMyAyM3YtNWg2djUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZBRjZFRiIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPgo=">
+<meta name="theme-color" content="#1F4035">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#1F4035;--verde-2:#2E5A4A;--verde-3:#16302a;--lino:#FAF6EF;--salvia:#E7EEE6;--salvia-2:#D7E3D6;
+    --miel:#E8A13A;--miel-dark:#C9831F;--tinta:#23211C;--tinta-soft:#6A675E;--linea:#E3DCCF;--blanco:#fff;
+    --rojo:#C7553B;--ok:#3C7A52;--radio:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Mulish',system-ui,sans-serif;background:var(--salvia);color:var(--tinta);-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.12}
+  .app{max-width:580px;margin:0 auto;min-height:100vh;background:var(--lino);box-shadow:0 0 60px -20px rgba(0,0,0,.15);display:flex;flex-direction:column}
+  /* topbar */
+  .top{background:var(--verde);color:var(--lino);padding:14px 18px;position:sticky;top:0;z-index:20}
+  .top .r{display:flex;align-items:center;gap:11px}
+  .seal{width:34px;height:34px;border-radius:9px;background:rgba(232,161,58,.18);display:grid;place-items:center;color:var(--miel);flex:0 0 auto}
+  .seal svg{width:19px;height:19px}
+  .top h1{font-size:1.12rem;color:var(--lino)}
+  .top .sub{font-size:.74rem;color:#BFD0C2}
+  .top .back{margin-left:auto;background:rgba(255,255,255,.12);border:0;color:var(--lino);border-radius:9px;width:36px;height:36px;cursor:pointer;display:none;place-items:center}
+  .top .back svg{width:18px;height:18px}
+  .pbar{height:5px;background:rgba(255,255,255,.16);border-radius:99px;margin-top:12px;overflow:hidden;display:none}
+  .pbar>i{display:block;height:100%;background:var(--miel);width:0;transition:width .3s}
+  main{flex:1;padding:18px 16px 40px}
+  /* chooser */
+  .hero{text-align:center;padding:14px 6px 22px}
+  .hero h2{font-size:1.7rem;color:var(--verde);margin-bottom:8px}
+  .hero p{color:var(--tinta-soft);font-size:.98rem;max-width:30em;margin:0 auto}
+  .choose{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+  .ccard{background:var(--blanco);border:1px solid var(--linea);border-radius:20px;padding:22px;cursor:pointer;transition:.18s;text-align:left;display:flex;gap:16px;align-items:center}
+  .ccard:active{transform:scale(.99)}
+  .ccard:hover{border-color:var(--verde-2);box-shadow:0 12px 30px -20px rgba(31,64,53,.5)}
+  .ccard .ico{width:56px;height:56px;border-radius:16px;flex:0 0 auto;display:grid;place-items:center;color:var(--lino)}
+  .ccard .ico.h{background:var(--verde)} .ccard .ico.t{background:var(--miel);color:var(--verde-3)}
+  .ccard .ico svg{width:28px;height:28px}
+  .ccard h3{font-size:1.18rem;color:var(--verde);margin-bottom:3px}
+  .ccard p{font-size:.86rem;color:var(--tinta-soft)}
+  .ccard .arr{margin-left:auto;color:var(--tinta-soft)}
+  /* sections / fields */
+  .section{background:var(--blanco);border:1px solid var(--linea);border-radius:var(--radio);padding:16px 15px;margin-bottom:14px}
+  .section>.sh{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+  .section>.sh .si{width:30px;height:30px;border-radius:9px;background:var(--salvia);display:grid;place-items:center;font-size:1rem}
+  .section>.sh h3{font-size:1.05rem;color:var(--verde)}
+  .field{margin-bottom:15px}.field:last-child{margin-bottom:0}
+  .field>label{display:block;font-size:.85rem;font-weight:700;color:var(--tinta);margin-bottom:7px}
+  .field .hint{font-size:.76rem;color:var(--tinta-soft);font-weight:400;margin-top:-3px;margin-bottom:7px}
+  input,select,textarea{font-family:inherit;font-size:.95rem;padding:11px 13px;border:1.5px solid var(--linea);border-radius:12px;background:var(--lino);color:var(--tinta);width:100%;transition:.15s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--verde-2);background:#fff}
+  textarea{resize:vertical;min-height:72px}
+  /* stepper */
+  .stepper{display:flex;align-items:center;gap:14px}
+  .stepper button{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--linea);background:var(--blanco);font-size:1.4rem;font-weight:700;color:var(--verde);cursor:pointer;display:grid;place-items:center;line-height:1;flex:0 0 auto}
+  .stepper button:active{background:var(--salvia)}
+  .stepper .val{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:600;color:var(--verde);min-width:32px;text-align:center}
+  /* toggle */
+  .tog{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+  .tog .sw{width:50px;height:30px;border-radius:99px;background:var(--salvia-2);position:relative;transition:.2s;flex:0 0 auto}
+  .tog .sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .tog.on .sw{background:var(--ok)} .tog.on .sw::after{left:23px}
+  .tog .tl{font-size:.92rem;font-weight:600}
+  /* chips / segmented */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:inherit;font-size:.85rem;font-weight:600;padding:9px 14px;border-radius:99px;border:1.5px solid var(--linea);background:var(--blanco);color:var(--tinta-soft);cursor:pointer;transition:.14s;display:inline-flex;align-items:center;gap:6px}
+  .chip:active{transform:scale(.97)}
+  .chip.on{background:var(--verde);border-color:var(--verde);color:var(--lino)}
+  .seg .chip.on{background:var(--miel);border-color:var(--miel);color:var(--verde-3)}
+  /* likescale */
+  .likes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .like{font-family:inherit;border:1.5px solid var(--linea);background:var(--blanco);border-radius:14px;padding:10px 4px;cursor:pointer;text-align:center;transition:.14s}
+  .like:active{transform:scale(.96)}
+  .like .em{font-size:1.5rem;display:block;line-height:1.1}
+  .like .lb{font-size:.66rem;font-weight:700;color:var(--tinta-soft);margin-top:3px}
+  .like.on{border-color:var(--verde);background:var(--salvia)}
+  .like.on .lb{color:var(--verde)}
+  /* buttons */
+  .btn{font-family:inherit;font-weight:700;border:0;border-radius:14px;cursor:pointer;padding:15px;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;transition:.15s}
+  .btn svg{width:19px;height:19px}
+  .btn-pri{background:var(--miel);color:var(--verde-3)}.btn-pri:active{background:var(--miel-dark)}
+  .btn-line{background:transparent;color:var(--verde);box-shadow:inset 0 0 0 1.5px var(--verde)}
+  .btn-wa{background:#25D366;color:#fff}
+  .req{color:var(--rojo)}
+  .disc{font-size:.78rem;color:var(--tinta-soft);text-align:center;margin-top:14px;line-height:1.5}
+  /* success */
+  .done{text-align:center;padding:30px 16px}
+  .done .big{width:84px;height:84px;border-radius:50%;background:var(--ok);display:grid;place-items:center;margin:0 auto 18px}
+  .done .big svg{width:44px;height:44px;color:#fff}
+  .done h2{font-size:1.7rem;color:var(--verde);margin-bottom:8px}
+  .done p{color:var(--tinta-soft);max-width:28em;margin:0 auto 22px}
+  .done .acts{display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto}
+  /* print */
+  #printArea{display:none}
+  @media print{.app{display:none!important}#printArea{display:block!important}@page{margin:1.4cm}}
+  .doc{font-family:'Mulish',sans-serif;color:#111;max-width:720px;margin:0 auto;font-size:13px}
+  .doc .db{display:flex;align-items:center;gap:10px;border-bottom:2px solid #1F4035;padding-bottom:10px;margin-bottom:14px}
+  .doc .db .s{width:38px;height:38px;border-radius:9px;background:#1F4035;color:#E8A13A;display:grid;place-items:center;font-weight:800}
+  .doc h1{font-family:'Fraunces',serif;font-size:18px;color:#1F4035}
+  .doc small{color:#666}
+  .doc .sec{font-family:'Fraunces',serif;font-size:13px;color:#1F4035;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+  .doc table{width:100%;border-collapse:collapse}
+  .doc td{padding:5px 4px;border-bottom:1px solid #eee;vertical-align:top}
+  .doc td.l{color:#666;width:42%}
+  .doc .fine{font-size:10px;color:#999;margin-top:18px;border-top:1px solid #eee;padding-top:8px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .refbox{border:1.5px dashed var(--linea);border-radius:12px;padding:12px;margin-bottom:10px;background:var(--lino)}
+  .refbox .rh{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+  .refbox .rh b{font-size:.85rem;color:var(--verde)}
+  .refbox .rh button{background:none;border:0;color:var(--rojo);font-size:1.4rem;cursor:pointer;line-height:1;padding:0 4px}
+  .refbox input{margin-bottom:8px;background:#fff}
+  .refbox input:last-child{margin-bottom:0}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="r">
+      <span class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 21v-6h6v6"/></svg></span>
+      <div><h1 id="topTitle">Fichas Nanys</h1><div class="sub" id="topSub">Selección de personal del hogar</div></div>
+      <button class="back" id="backBtn" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    </div>
+    <div class="pbar" id="pbar"><i id="pbarFill"></i></div>
+  </header>
+  <main id="main"></main>
+</div>
+<div id="printArea"></div>
+
+<script>
+const SUPABASE_URL="https://bqlgfmqcefledqyodkii.supabase.co";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbGdmbXFjZWZsZWRxeW9ka2lpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1OTAxMjUsImV4cCI6MjA5NTE2NjEyNX0.m_XyXsZ84niHcHrKNgHSDSS8DxpR7vnHhMfQJk7yM_s";
+const WHATSAPP="56961218105";
+
+const LIKE_OPTS=[{em:'😍',lb:'Me encantan'},{em:'🙂',lb:'Me gustan'},{em:'😐',lb:'Neutral'},{em:'🙁',lb:'Prefiero no'}];
+
+/* ============ ESQUEMAS DE LAS FICHAS ============ */
+const FICHAS={
+  hogar:{
+    title:'Ficha del Hogar', sub:'Cuéntanos cómo es tu casa', emoji:'🏠',
+    sections:[
+      {t:'Tus datos', i:'👤', f:[
+        {id:'nombre',l:'Nombre completo',t:'text',req:1,ph:'Ej: Juan Pérez'},
+        {id:'rut',l:'RUT',t:'text',ph:'12.345.678-9'},
+        {id:'telefono',l:'Teléfono / WhatsApp',t:'tel',req:1,ph:'+56 9 ...'},
+        {id:'email',l:'Email',t:'email',ph:'tucorreo@mail.com'},
+        {id:'comuna',l:'Comuna',t:'text',ph:'Providencia'},
+        {id:'direccion',l:'Dirección',t:'text',ph:'Calle 123'},
+      ]},
+      {t:'Tu hogar', i:'👨‍👩‍👧', f:[
+        {id:'integrantes',l:'¿Cuántas personas viven en casa?',t:'stepper',min:1,def:1},
+        {id:'ninos',l:'¿Cuántos niños?',t:'stepper'},
+        {id:'edades_ninos',l:'Edades de los niños',t:'chips',o:['Bebés (0-2)','Preescolar (3-5)','Escolares (6-12)','Adolescentes']},
+        {id:'adultos_mayores',l:'¿Cuántos adultos mayores?',t:'stepper'},
+        {id:'cuidados_esp',l:'¿Alguien requiere cuidados especiales o movilidad reducida?',t:'toggle'},
+      ]},
+      {t:'Mascotas', i:'🐾', f:[
+        {id:'perros',l:'¿Cuántos perros?',t:'stepper'},
+        {id:'tamano_perros',l:'Tamaño de los perros',t:'chips',o:['Pequeños','Medianos','Grandes']},
+        {id:'gatos',l:'¿Cuántos gatos?',t:'stepper'},
+        {id:'otras_mascotas',l:'¿Otras mascotas?',t:'chips',o:['Aves','Peces','Conejos','Tortugas','Otras']},
+      ]},
+      {t:'La vivienda', i:'🏡', f:[
+        {id:'tipo_vivienda',l:'Tipo de vivienda',t:'seg',o:['Casa','Departamento','Parcela']},
+        {id:'dormitorios',l:'Dormitorios',t:'stepper',min:1,def:1},
+        {id:'banos',l:'Baños',t:'stepper',min:1,def:1},
+        {id:'pisos',l:'Pisos',t:'stepper',min:1,def:1},
+        {id:'piscina',l:'¿Tiene piscina?',t:'toggle'},
+        {id:'jardin',l:'¿Tiene jardín o patio?',t:'toggle'},
+        {id:'quincho',l:'¿Quincho o terraza?',t:'toggle'},
+      ]},
+      {t:'Dinámica del hogar', i:'🕑', f:[
+        {id:'presencia_dia',l:'¿Quién está en casa durante la jornada?',t:'chips',o:['La dueña de casa','El dueño de casa','Ambos dueños','Adultos mayores','Niños','La trabajadora sola']},
+        {id:'home_office',l:'¿El empleador trabaja desde casa (home office)?',t:'toggle'},
+        {id:'autonomia',l:'Forma de trabajo esperada',t:'seg',o:['Con supervisión','Mixto','Autónoma']},
+        {id:'otro_personal',l:'¿Hay otra persona de servicio en casa?',t:'toggle'},
+        {id:'coordina',l:'¿Quién coordina a la trabajadora?',t:'seg',o:['La dueña de casa','El dueño de casa','Ambos']},
+        {id:'ambiente',l:'Ambiente del hogar',t:'seg',o:['Tranquilo','Movido','Con visitas frecuentes']},
+        {id:'conserjeria',l:'¿Condominio o edificio con conserjería?',t:'toggle'},
+      ]},
+      {t:'Personal que busco', i:'🔎', f:[
+        {id:'tipo_personal',l:'¿Qué personal necesitas?',t:'chips',o:['Nana','Asesora del hogar','Niñera','Cuidador/a adulto mayor','Jardinero','Chofer','Matrimonio cuidador','Paseador de mascotas']},
+        {id:'modalidad',l:'Modalidad',t:'seg',o:['Puertas afuera','Puertas adentro','Por día']},
+        {id:'dias',l:'Días requeridos',t:'chips',o:['Lun','Mar','Mié','Jue','Vie','Sáb','Dom']},
+        {id:'tareas',l:'Tareas principales',t:'chips',o:['Cocina','Aseo','Planchado','Lavado','Compras','Cuidado niños','Cuidado adulto mayor','Mascotas','Jardín','Manejar']},
+        {id:'sueldo',l:'Sueldo ofrecido ($)',t:'number',ph:'550000'},
+        {id:'inicio',l:'Fecha de inicio',t:'date'},
+      ]},
+      {t:'Convivencia y preferencias', i:'💬', f:[
+        {id:'fumadores',l:'¿Se fuma en casa?',t:'seg',o:['No se fuma','Se permite fumar']},
+        {id:'dietas',l:'¿Dietas especiales en casa?',t:'chips',o:['Sin gluten','Vegetariana','Vegana','Diabética','Ninguna']},
+        {id:'idiomas',l:'Idiomas deseados',t:'chips',o:['Español','Inglés','Otro']},
+        {id:'uniforme',l:'¿Se usa uniforme?',t:'toggle'},
+        {id:'comentarios',l:'Lo más importante para ti',t:'textarea',ph:'Cuéntanos qué valoras más en la persona que buscas…'},
+      ]},
+    ]
+  },
+  trabajadora:{
+    title:'Ficha de la Trabajadora', sub:'Muéstrate como eres', emoji:'💚',
+    sections:[
+      {t:'Tus datos', i:'👤', f:[
+        {id:'nombre',l:'Nombre completo',t:'text',req:1,ph:'Ej: María González'},
+        {id:'rut',l:'RUT',t:'text',ph:'12.345.678-9'},
+        {id:'nacionalidad',l:'Nacionalidad',t:'text',ph:'Chilena'},
+        {id:'nacimiento',l:'Fecha de nacimiento',t:'date'},
+        {id:'telefono',l:'Teléfono / WhatsApp',t:'tel',req:1,ph:'+56 9 ...'},
+        {id:'comuna',l:'Comuna donde vives',t:'text',ph:'La Florida'},
+        {id:'situacion',l:'Situación',t:'seg',o:['Chilena','Residencia definitiva','Residencia temporal','En trámite']},
+        {id:'emergencia_nombre',l:'Contacto de emergencia (nombre y relación)',t:'text',ph:'Ej: Ana (hermana)'},
+        {id:'emergencia_tel',l:'Teléfono de emergencia',t:'tel',ph:'+56 9 ...'},
+      ]},
+      {t:'Tu experiencia y referencias', i:'💼', f:[
+        {id:'anios_exp',l:'Años de experiencia',t:'stepper'},
+        {id:'roles',l:'¿Qué roles has hecho?',t:'chips',o:['Nana','Asesora del hogar','Niñera','Cuidadora adulto mayor','Cocinera','Aseo']},
+        {id:'referencias',l:'Referencias de hogares donde trabajaste',t:'refs',hint:'Agrega contactos para corroborar tu experiencia (nombre, teléfono, comuna y tiempo). Mientras más referencias, mejor tu match.'},
+        {id:'autoriza_verif',l:'Autorizo a Nanys a contactar mis referencias y verificar mis antecedentes',t:'toggle'},
+      ]},
+      {t:'Tus habilidades', i:'✨', f:[
+        {id:'habilidades',l:'¿Qué dominas?',t:'chips',o:['Cocina','Aseo profundo','Planchado','Lavado','Repostería','Organización','Cuidado de bebés']},
+        {id:'cocina_tipo',l:'Tipo de cocina',t:'chips',o:['Casera chilena','Internacional','Vegetariana','Repostería']},
+        {id:'maneja',l:'¿Sabes manejar?',t:'toggle'},
+        {id:'licencia',l:'¿Licencia de conducir al día?',t:'toggle'},
+        {id:'primeros_aux',l:'¿Sabes primeros auxilios?',t:'toggle'},
+        {id:'idiomas',l:'Idiomas que hablas',t:'chips',o:['Español','Inglés','Creole','Portugués','Otro']},
+      ]},
+      {t:'Tus preferencias', i:'💚', f:[
+        {id:'like_ninos',l:'¿Te gustan los niños?',t:'like'},
+        {id:'like_perros',l:'¿Te gustan los perros?',t:'like'},
+        {id:'like_gatos',l:'¿Te gustan los gatos?',t:'like'},
+        {id:'comodidad_am',l:'¿Cómoda cuidando adultos mayores?',t:'like'},
+        {id:'modalidad',l:'Modalidad que prefieres',t:'seg',o:['Puertas afuera','Puertas adentro','Por día']},
+        {id:'cama_adentro',l:'¿Disponible cama adentro?',t:'toggle'},
+        {id:'viajar',l:'¿Dispuesta a viajar / segunda vivienda?',t:'toggle'},
+        {id:'zonas',l:'¿En qué sectores puedes trabajar?',t:'chips',o:['Oriente','Centro','Poniente','Sur','Norte','Toda la RM']},
+      ]},
+      {t:'Sobre ti', i:'🌟', f:[
+        {id:'personalidad',l:'¿Cómo te describes?',t:'chips',o:['Paciente','Cariñosa','Ordenada','Proactiva','Puntual','Responsable','Discreta','Alegre']},
+        {id:'disponibilidad',l:'¿Cuándo puedes empezar?',t:'seg',o:['Inmediata','Próxima semana','A convenir']},
+        {id:'pretension',l:'Pretensión de sueldo ($)',t:'number',ph:'550000'},
+        {id:'mensaje',l:'Algo que te gustaría que el hogar sepa',t:'textarea',ph:'Escribe un mensaje para tu futuro hogar…'},
+      ]},
+    ]
+  }
+};
+
+/* ============ ESTADO ============ */
+let current=null, state={};
+const $=id=>document.getElementById(id);
+const esc=s=>(s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const allFields=f=>FICHAS[f].sections.flatMap(s=>s.f);
+
+/* ============ CHOOSER ============ */
+function renderChooser(){
+  current=null; state={};
+  $('topTitle').textContent='Fichas Nanys';
+  $('topSub').textContent='Selección de personal del hogar';
+  $('backBtn').style.display='none'; $('pbar').style.display='none';
+  $('main').innerHTML=`
+    <div class="hero">
+      <h2>¿Quién eres?</h2>
+      <p>Completa tu ficha para que Nanys encuentre el match perfecto entre hogares y trabajadoras.</p>
+    </div>
+    <div class="choose">
+      <button class="ccard" data-go="hogar">
+        <span class="ico h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 21v-6h6v6"/></svg></span>
+        <div><h3>Soy un hogar</h3><p>Busco personal para mi casa: nana, jardinero, cuidador…</p></div>
+        <span class="arr"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+      </button>
+      <button class="ccard" data-go="trabajadora">
+        <span class="ico t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <div><h3>Soy trabajadora</h3><p>Quiero postular y mostrar mi experiencia y preferencias.</p></div>
+        <span class="arr"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+      </button>
+    </div>
+    <p class="disc">Tus datos se envían de forma segura a Nanys y no se comparten con terceros.</p>`;
+  document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>openFicha(b.dataset.go)));
+}
+
+/* ============ RENDER FICHA ============ */
+function openFicha(key){
+  current=key; state={};
+  const f=FICHAS[key];
+  // defaults
+  allFields(key).forEach(fl=>{ if(fl.t==='stepper') state[fl.id]=fl.def||0; if(fl.t==='toggle') state[fl.id]=false; if(fl.t==='chips') state[fl.id]=[]; if(fl.t==='refs') state[fl.id]=[]; });
+  $('topTitle').textContent=f.title;
+  $('topSub').textContent=f.sub;
+  $('backBtn').style.display='grid'; $('pbar').style.display='block';
+  $('main').innerHTML = f.sections.map(renderSection).join('') + `
+    <button class="btn btn-pri" id="submitBtn" style="margin-top:6px">Enviar mi ficha</button>
+    <p class="disc">Al enviar, tu ficha llega a Nanys para encontrar tu match ideal.</p>`;
+  $('main').scrollTop=0; window.scrollTo(0,0);
+  wireFields();
+  allFields(current).filter(f=>f.t==='refs').forEach(f=>renderRefs(f.id));
+  document.querySelectorAll('[data-addref]').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.addref; state[id]=state[id]||[]; state[id].push({}); renderRefs(id); updateProgress(); }));
+  $('submitBtn').addEventListener('click',submit);
+  updateProgress();
+}
+function renderSection(s){
+  return `<div class="section"><div class="sh"><span class="si">${s.i}</span><h3>${esc(s.t)}</h3></div>${s.f.map(renderField).join('')}</div>`;
+}
+function renderField(f){
+  let inner='';
+  if(['text','tel','email','number','date'].includes(f.t))
+    inner=`<input data-f="${f.id}" type="${f.t}" placeholder="${esc(f.ph||'')}">`;
+  else if(f.t==='textarea')
+    inner=`<textarea data-f="${f.id}" placeholder="${esc(f.ph||'')}"></textarea>`;
+  else if(f.t==='stepper')
+    inner=`<div class="stepper"><button data-step="${f.id}" data-d="-1">−</button><span class="val" id="v-${f.id}">${f.def||0}</span><button data-step="${f.id}" data-d="1">+</button></div>`;
+  else if(f.t==='toggle')
+    inner=`<div class="tog" data-tog="${f.id}"><span class="sw"></span><span class="tl" id="tl-${f.id}">No</span></div>`;
+  else if(f.t==='chips')
+    inner=`<div class="chips">${f.o.map(o=>`<button class="chip" data-chip="${f.id}" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
+  else if(f.t==='seg')
+    inner=`<div class="chips seg">${f.o.map(o=>`<button class="chip" data-seg="${f.id}" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
+  else if(f.t==='like')
+    inner=`<div class="likes">${LIKE_OPTS.map((o,i)=>`<button class="like" data-like="${f.id}" data-v="${i}"><span class="em">${o.em}</span><span class="lb">${o.lb}</span></button>`).join('')}</div>`;
+  else if(f.t==='refs')
+    inner=`<div id="refs-${f.id}"></div><button type="button" class="btn btn-line" data-addref="${f.id}" style="padding:11px;font-size:.9rem">+ Agregar referencia</button>`;
+  return `<div class="field"><label>${esc(f.l)}${f.req?' <span class="req">*</span>':''}</label>${f.hint?`<div class="hint">${esc(f.hint)}</div>`:''}${inner}</div>`;
+}
+function renderRefs(id){
+  const box=$('refs-'+id), arr=state[id]||[];
+  box.innerHTML=arr.map((r,i)=>`<div class="refbox">
+    <div class="rh"><b>Referencia ${i+1}</b><button type="button" data-delref="${id}|${i}">×</button></div>
+    <input data-ref="${id}|${i}|nombre" placeholder="Nombre del empleador" value="${esc(r.nombre||'')}">
+    <div class="two">
+      <input data-ref="${id}|${i}|telefono" placeholder="Teléfono" value="${esc(r.telefono||'')}">
+      <input data-ref="${id}|${i}|comuna" placeholder="Comuna donde trabajó" value="${esc(r.comuna||'')}">
+    </div>
+    <input data-ref="${id}|${i}|tiempo" placeholder="Tiempo trabajado (ej: 2 años)" value="${esc(r.tiempo||'')}">
+  </div>`).join('');
+  box.querySelectorAll('[data-ref]').forEach(el=>el.addEventListener('input',()=>{ const [fid,idx,key]=el.dataset.ref.split('|'); state[fid][idx][key]=el.value; updateProgress(); }));
+  box.querySelectorAll('[data-delref]').forEach(b=>b.addEventListener('click',()=>{ const [fid,idx]=b.dataset.delref.split('|'); state[fid].splice(+idx,1); renderRefs(fid); updateProgress(); }));
+}
+
+/* ============ WIRING ============ */
+function wireFields(){
+  document.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('input',()=>{ state[el.dataset.f]=el.value; updateProgress(); }));
+  document.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.step, fl=allFields(current).find(x=>x.id===id), min=fl.min||0;
+    state[id]=Math.max(min,(state[id]||0)+(+b.dataset.d));
+    $('v-'+id).textContent=state[id]; updateProgress();
+  }));
+  document.querySelectorAll('[data-tog]').forEach(t=>t.addEventListener('click',()=>{
+    const id=t.dataset.tog; state[id]=!state[id]; t.classList.toggle('on',state[id]); $('tl-'+id).textContent=state[id]?'Sí':'No'; updateProgress();
+  }));
+  document.querySelectorAll('[data-chip]').forEach(c=>c.addEventListener('click',()=>{
+    const id=c.dataset.chip, v=c.dataset.v; state[id]=state[id]||[];
+    const i=state[id].indexOf(v); i>=0?state[id].splice(i,1):state[id].push(v);
+    c.classList.toggle('on'); updateProgress();
+  }));
+  document.querySelectorAll('[data-seg]').forEach(c=>c.addEventListener('click',()=>{
+    const id=c.dataset.seg; state[id]=c.dataset.v;
+    document.querySelectorAll(`[data-seg="${id}"]`).forEach(x=>x.classList.toggle('on',x===c)); updateProgress();
+  }));
+  document.querySelectorAll('[data-like]').forEach(c=>c.addEventListener('click',()=>{
+    const id=c.dataset.like; state[id]=+c.dataset.v;
+    document.querySelectorAll(`[data-like="${id}"]`).forEach(x=>x.classList.toggle('on',x===c)); updateProgress();
+  }));
+}
+function answered(f){ const v=state[f.id];
+  if(f.t==='chips') return v&&v.length>0;
+  if(f.t==='refs') return v&&v.length>0&&v.some(r=>r.nombre);
+  if(f.t==='stepper') return (v||0)>0;
+  if(f.t==='toggle') return true; // siempre cuenta (tiene valor)
+  if(f.t==='like'||f.t==='seg') return v!==undefined&&v!==null&&v!=='';
+  return v!==undefined&&v!==null&&(v+'').trim()!=='';
+}
+function updateProgress(){
+  const fs=allFields(current).filter(f=>f.t!=='toggle');
+  const done=fs.filter(answered).length;
+  $('pbarFill').style.width=Math.round(done/fs.length*100)+'%';
+}
+
+/* ============ ENVÍO ============ */
+function fmtVal(f){
+  let v=state[f.id];
+  if(f.t==='toggle') return v?'Sí':'No';
+  if(f.t==='chips') return (v&&v.length)?v.join(', '):'—';
+  if(f.t==='refs') return (v&&v.length)?v.filter(r=>r.nombre||r.telefono).map(r=>`${r.nombre||'—'} (${r.comuna||'s/comuna'}, tel ${r.telefono||'s/n'}${r.tiempo?', '+r.tiempo:''})`).join('  |  ')||'—':'—';
+  if(f.t==='like') return v!=null?LIKE_OPTS[v].em+' '+LIKE_OPTS[v].lb:'—';
+  if(v===undefined||v===null||v==='') return '—';
+  if(f.t==='number') return '$'+Number(v).toLocaleString('es-CL');
+  return v;
+}
+async function submit(){
+  if(!state.nombre||!(state.nombre+'').trim()){ alert('Por favor escribe tu nombre.'); window.scrollTo(0,0); return; }
+  if(!state.telefono||!(state.telefono+'').trim()){ alert('Por favor escribe tu teléfono.'); return; }
+  const btn=$('submitBtn'); btn.textContent='Enviando…'; btn.disabled=true;
+  const datos={}; allFields(current).forEach(f=>{ datos[f.id]={label:f.l,valor:fmtVal(f)}; });
+  const payload={tipo:current,nombre:state.nombre,telefono:state.telefono,comuna:state.comuna||null,datos,origen:'ficha_web'};
+  try{
+    await fetch(`${SUPABASE_URL}/rest/v1/fichas`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(payload)});
+  }catch(e){ console.warn('Supabase:',e); }
+  showDone();
+}
+function buildSummary(){
+  return FICHAS[current].sections.map(s=>{
+    const lines=s.f.map(f=>`• ${f.l}: ${fmtVal(f)}`).join('\n');
+    return `*${s.t}*\n${lines}`;
+  }).join('\n\n');
+}
+function showDone(){
+  $('pbar').style.display='none'; $('backBtn').style.display='none';
+  const isHogar=current==='hogar';
+  const waMsg=`¡Hola Nanys! Acá va mi *${FICHAS[current].title}* 📋\n\n${buildSummary()}`;
+  $('main').innerHTML=`
+    <div class="done">
+      <div class="big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h2>¡Ficha enviada!</h2>
+      <p>Gracias, <b>${esc(state.nombre)}</b>. Nanys ya recibió tu ficha y la usará para encontrar tu <b>match ideal</b> ${isHogar?'de personal para tu hogar':'de hogar para trabajar'}. 💚</p>
+      <div class="acts">
+        <a class="btn btn-wa" id="waBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.2 14.8l-.3-.2-2.8.7.8-2.7-.2-.3A8 8 0 0 1 12 4z"/></svg> Enviar copia por WhatsApp</a>
+        <button class="btn btn-line" id="pdfBtn">📄 Descargar mi ficha (PDF)</button>
+        <button class="btn btn-line" id="againBtn">Completar otra ficha</button>
+      </div>
+    </div>`;
+  $('waBtn').href=`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(waMsg)}`;
+  $('waBtn').target='_blank';
+  $('pdfBtn').addEventListener('click',printFicha);
+  $('againBtn').addEventListener('click',renderChooser);
+}
+
+/* ============ PDF ============ */
+function printFicha(){
+  const f=FICHAS[current];
+  const body=f.sections.map(s=>`<div class="sec">${esc(s.t)}</div><table>${s.f.map(fl=>`<tr><td class="l">${esc(fl.l)}</td><td>${esc(fmtVal(fl))}</td></tr>`).join('')}</table>`).join('');
+  $('printArea').innerHTML=`<div class="doc">
+    <div class="db"><div class="s">N</div><div><h1>${esc(f.title)}</h1><small>Nanys · ${new Date().toLocaleDateString('es-CL')}</small></div></div>
+    ${body}
+    <p class="fine">Ficha generada en fichas Nanys. Información declarada por el/la postulante.</p></div>`;
+  setTimeout(()=>window.print(),60);
+}
+
+/* ============ INICIO (deep-link ?t=hogar|trabajadora) ============ */
+const t=new URLSearchParams(location.search).get('t');
+$('backBtn').addEventListener('click',renderChooser);
+if(t==='hogar'||t==='trabajadora') openFicha(t); else renderChooser();
+</script>
+</body>
+</html>

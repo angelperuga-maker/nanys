@@ -78,11 +78,29 @@
   .wa-link{display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;font-weight:700;padding:13px;border-radius:13px;text-decoration:none}
   .wa-link svg{width:18px;height:18px;fill:#fff}
   .loading{text-align:center;padding:40px;color:var(--tinta-soft)}
+  /* PDF / print */
+  #printArea{display:none}
+  @media print{
+    .app,.scrim{display:none !important}
+    #printArea{display:block !important}
+    @page{margin:1.6cm}
+  }
+  .doc{font-family:'Mulish',sans-serif;color:#111;max-width:720px;margin:0 auto;font-size:13px;line-height:1.6}
+  .doc .db{display:flex;align-items:center;gap:11px;border-bottom:2px solid #1F4035;padding-bottom:11px;margin-bottom:16px}
+  .doc .db .s{width:42px;height:42px;border-radius:10px;background:#1F4035;color:#E8A13A;display:grid;place-items:center;font-weight:800;font-size:1.1rem;flex:0 0 auto}
+  .doc h1{font-family:'Fraunces',serif;font-size:19px;color:#1F4035}
+  .doc small{color:#666}
+  .doc table{width:100%;border-collapse:collapse;margin-top:4px}
+  .doc td{padding:8px 6px;border-bottom:1px solid #eee;vertical-align:top}
+  .doc td.l{color:#666;width:42%;font-weight:600}
+  .doc .badge{display:inline-block;background:#E7EEE6;color:#2E5A4A;font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:14px}
+  .doc .fine{font-size:10px;color:#999;margin-top:20px;border-top:1px solid #eee;padding-top:9px}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <div class="scrim" id="scrim"><div class="sheet" id="sheet"></div></div>
+<div id="printArea"></div>
 
 <script>
 const URL_SB="https://bqlgfmqcefledqyodkii.supabase.co";
@@ -297,23 +315,37 @@ const scrim=$('scrim'), sheet=$('sheet');
 function openSheet(html){ sheet.innerHTML=html; scrim.classList.add('open'); sheet.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeSheet)); }
 function closeSheet(){ scrim.classList.remove('open'); }
 scrim.addEventListener('click',e=>{if(e.target===scrim)closeSheet();});
-const HIDE_SHARE=['telefono','email','rut','direccion','emergencia_nombre','emergencia_tel'];
-function redactedSummary(f){
+const HIDE_SHARE=['telefono','email','rut','direccion','nacimiento','emergencia_nombre','emergencia_tel','estado_civil','tiene_hijos','num_hijos','edades_hijos','vive_con','prevision_afp','prevision_salud'];
+function shareableData(f){
   const titulo=f.tipo==='hogar'?'Ficha de Hogar':'Ficha de Postulante';
   const primerNombre=(f.nombre||'').trim().split(/\s+/)[0]||'';
-  const header=`*${titulo}*${primerNombre?(' — '+primerNombre):''}`;
   const lines=[];
   for(const [fid,d] of Object.entries(f.datos||{})){
     if(HIDE_SHARE.includes(fid)||fid==='nombre'||fid==='comuna') continue;
     if(fid==='referencias'){
       const refs=Array.isArray(d.raw)?d.raw:[];
       const r=refs.filter(x=>x&&(x.comuna||x.tiempo)).map(x=>`en ${x.comuna||'—'}${x.tiempo?' ('+x.tiempo+')':''}`);
-      if(r.length) lines.push('• Referencias comprobables: '+r.join('; '));
+      if(r.length) lines.push({label:'Referencias comprobables', valor:r.join('; ')});
       continue;
     }
-    if(d.valor && d.valor!=='—') lines.push('• '+d.label+': '+d.valor);
+    if(d.valor && d.valor!=='—') lines.push({label:d.label, valor:d.valor});
   }
-  return `${header}\n\n${lines.join('\n')}\n\n_Compartido por Nanys · datos de contacto reservados. Te coordinamos nosotros._`;
+  return {titulo, primerNombre, lines};
+}
+function redactedSummary(f){
+  const {titulo,primerNombre,lines}=shareableData(f);
+  const header=`*${titulo}*${primerNombre?(' — '+primerNombre):''}`;
+  return `${header}\n\n${lines.map(l=>'• '+l.label+': '+l.valor).join('\n')}\n\n_Compartido por Nanys · datos de contacto reservados. Te coordinamos nosotros._`;
+}
+function printFichaPDF(f){
+  const {titulo,primerNombre,lines}=shareableData(f);
+  $('printArea').innerHTML=`<div class="doc">
+    <div class="db"><div class="s">N</div><div><h1>${esc(titulo)}${primerNombre?' — '+esc(primerNombre):''}</h1><small>Nanys · Perfil reservado</small></div></div>
+    <span class="badge">🔒 Datos de contacto e identidad reservados</span>
+    <table>${lines.map(l=>`<tr><td class="l">${esc(l.label)}</td><td>${esc(l.valor)}</td></tr>`).join('')}</table>
+    <p class="fine">Perfil preparado por Nanys. Los datos de contacto e identidad de la persona están reservados; la coordinación y el contacto se realizan exclusivamente a través de la agencia. Documento referencial.</p>
+  </div>`;
+  setTimeout(()=>window.print(),60);
 }
 function openFicha(kind,id){
   const f=(kind==='h'?hogares:trabaj).find(x=>x.id===id); if(!f) return;
@@ -324,10 +356,12 @@ function openFicha(kind,id){
     <p class="muted" style="margin:10px 0 0">🔒 = no se incluye al compartir sin contacto</p>
     <div class="wa">${f.telefono?`<a class="wa-link" target="_blank" href="${wa}"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2z"/></svg> Escribir por WhatsApp</a>`:''}</div>
     <button class="btn btn-pri" id="shareNC" style="margin-top:10px">📤 Compartir sin datos de contacto</button>
+    <button class="btn btn-line" id="pdfNC" style="margin-top:8px">📄 Descargar PDF (sin contacto)</button>
     <button class="btn btn-line" id="copyNC" style="margin-top:8px">📋 Copiar resumen (sin contacto)</button>
     <button class="btn btn-line" data-close style="margin-top:8px">Cerrar</button>`);
   const summary=redactedSummary(f);
   $('shareNC').addEventListener('click',()=>window.open('https://wa.me/?text='+encodeURIComponent(summary),'_blank'));
+  $('pdfNC').addEventListener('click',()=>printFichaPDF(f));
   $('copyNC').addEventListener('click',async()=>{
     try{ await navigator.clipboard.writeText(summary); }catch(e){ const ta=document.createElement('textarea'); ta.value=summary; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
     const b=$('copyNC'); b.textContent='¡Copiado!'; setTimeout(()=>b.textContent='📋 Copiar resumen (sin contacto)',1400);

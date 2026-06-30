@@ -392,7 +392,7 @@ async function submit(){
   if(!state.nombre||!(state.nombre+'').trim()){ alert('Por favor escribe tu nombre.'); window.scrollTo(0,0); return; }
   if(!state.telefono||!(state.telefono+'').trim()){ alert('Por favor escribe tu teléfono.'); return; }
   const btn=$('submitBtn'); btn.textContent='Enviando…'; btn.disabled=true;
-  const datos={}; allFields(current).forEach(f=>{ datos[f.id]={label:f.l,valor:fmtVal(f)}; });
+  const datos={}; allFields(current).forEach(f=>{ datos[f.id]={label:f.l,valor:fmtVal(f),raw:state[f.id]!==undefined?state[f.id]:null}; });
   const payload={tipo:current,nombre:state.nombre,telefono:state.telefono,comuna:state.comuna||null,datos,origen:'ficha_web'};
   try{
     await fetch(`${SUPABASE_URL}/rest/v1/fichas`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(payload)});

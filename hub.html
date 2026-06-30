@@ -155,6 +155,7 @@ function appView(){
         <button data-t="postulantes">Postulantes (${trabaj.length})</button>
         <button data-t="solicitudes">Solicitudes (${leads.length})</button>
         <button data-t="match">Match ✨</button>
+        <button data-t="enviar">Enviar fichas</button>
       </div>
     </header>
     <main id="main"></main></div>`;
@@ -170,6 +171,7 @@ function render(){
   if(tab==='postulantes') m.innerHTML=listFichas(trabaj,'t');
   if(tab==='solicitudes') m.innerHTML=viewLeads();
   if(tab==='match') m.innerHTML=viewMatch();
+  if(tab==='enviar') m.innerHTML=viewEnviar();
   wire();
 }
 
@@ -229,6 +231,34 @@ function viewMatch(){
           <div class="reasons">${r.reasons.map(x=>`<span class="ok">✓ ${esc(x)}</span>`).join('')}${r.flags.map(x=>`<span class="bad">⚠ ${esc(x)}</span>`).join('')}</div>
         </div></div></div>`;
     }).join('')}`;
+}
+function fichaBase(){ return location.origin + location.pathname.replace(/[^/]*$/, 'fichas.html'); }
+function viewEnviar(){
+  const base=fichaBase();
+  const links=[
+    {ic:'🔗',t:'Link general (la persona elige)',d:'Sirve para los dos: muestra "¿Quién eres?" y la persona escoge.',url:base},
+    {ic:'🏠',t:'Link directo · Hogar',d:'Abre directo la ficha del contratante.',url:base+'?t=hogar'},
+    {ic:'🧑‍🍼',t:'Link directo · Trabajadora',d:'Abre directo la ficha de la postulante.',url:base+'?t=trabajadora'},
+  ];
+  return `
+    <div class="lbl">Enviar por WhatsApp</div>
+    <div class="card" style="cursor:default">
+      <div class="field" style="margin-bottom:10px"><label>Número de WhatsApp</label><input id="waNum" type="tel" placeholder="9 1234 5678"></div>
+      <label style="display:block;font-size:.8rem;font-weight:700;color:var(--verde);margin-bottom:6px">¿Qué ficha le mando?</label>
+      <div class="chips seg" id="waPick" style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="chip on" data-pick="general">Que elija</button>
+        <button class="chip" data-pick="hogar">Hogar</button>
+        <button class="chip" data-pick="trab">Trabajadora</button>
+      </div>
+      <button class="btn btn-pri" id="waSend">Enviar por WhatsApp</button>
+    </div>
+    <div class="lbl">O copia el link</div>
+    ${links.map(l=>`<div class="card" style="cursor:default"><div class="row">
+        <div class="av" style="background:var(--salvia);color:var(--verde)">${l.ic}</div>
+        <div class="grow"><div class="nm" style="font-size:.92rem">${esc(l.t)}</div><div class="meta">${esc(l.d)}</div></div>
+        <button class="btn btn-line" style="width:auto;padding:9px 14px;font-size:.82rem" data-copy="${esc(l.url)}">Copiar</button>
+      </div></div>`).join('')}
+    <p class="muted" style="text-align:center;margin-top:8px">Los links se ajustan solos al dominio donde subas las fichas.</p>`;
 }
 
 /* ===== MATCH ENGINE ===== */
@@ -291,6 +321,26 @@ function wire(){
   document.querySelectorAll('[data-open]').forEach(c=>c.addEventListener('click',()=>{const[k,id]=c.dataset.open.split('|');openFicha(k,id);}));
   document.querySelectorAll('[data-lead]').forEach(c=>c.addEventListener('click',()=>openLead(c.dataset.lead)));
   const ms=$('matchSel'); if(ms) ms.addEventListener('change',e=>{matchHogar=e.target.value;render();});
+  // enviar fichas
+  document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
+    try{ await navigator.clipboard.writeText(b.dataset.copy); }catch(e){ const ta=document.createElement('textarea'); ta.value=b.dataset.copy; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+    const o=b.textContent; b.textContent='¡Copiado!'; setTimeout(()=>b.textContent=o,1400);
+  }));
+  let pick='general';
+  document.querySelectorAll('#waPick [data-pick]').forEach(b=>b.addEventListener('click',()=>{ pick=b.dataset.pick; document.querySelectorAll('#waPick [data-pick]').forEach(x=>x.classList.toggle('on',x===b)); }));
+  const ws=$('waSend'); if(ws) ws.addEventListener('click',()=>{
+    let n=($('waNum').value||'').replace(/\D/g,'');
+    if(!n){ $('waNum').focus(); return; }
+    if(n.length===9 && n[0]==='9') n='56'+n; else if(n.length===8) n='569'+n;
+    const base=fichaBase();
+    const url = pick==='hogar'?base+'?t=hogar' : pick==='trab'?base+'?t=trabajadora' : base;
+    const msgs={
+      hogar:`¡Hola! 👋 Soy de *Nanys*. Para buscarte el personal ideal para tu hogar, completa esta ficha rápida:`,
+      trab:`¡Hola! 👋 Soy de *Nanys*. Para postular y encontrar tu próximo trabajo, completa tu ficha aquí:`,
+      general:`¡Hola! 👋 Soy de *Nanys*. Completa tu ficha aquí (elige si eres hogar o trabajadora):`
+    };
+    window.open(`https://wa.me/${n}?text=${encodeURIComponent(msgs[pick]+'\n\n'+url)}`,'_blank');
+  });
 }
 
 loginView();
